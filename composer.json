@@ -1,0 +1,10 @@
+{
+    "require": {
+        "google/cloud-vision": "^0.11.4",
+        "google/cloud-bigquery": "^1.2",
+        "google/cloud": "^0.65.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "6.5"
+    }
+}
