@@ -1,5 +1,11 @@
 <?php
-$input = '
+require_once '../../utilities/Axis.php';
+require_once '../../utilities/Triangle.php';
+
+class Simple
+{
+
+    private $input = '
 {
     "fullTextAnnotation":
     {
@@ -16334,235 +16340,159 @@ $input = '
     }
 }
 ';
-// not enough
-// $frontText = "氏名個人番号カード住所性別年月日生まで有効電子証明書の有効期限臓器提供意思脳死後及び心停止した死後のみせずでくないがあれば肝臓腎臓特記欄署名";
-// $backText = "このカードを拾得された方はお手数ですが下記連絡先までご連絡ください連絡先個人番号カードコールセンター 0570783578-(24時間受付)法律で認められた者以外の者が個人番号をコピーすることは法律で禁止されていますまた記載事項改ざんした者は法律により罰せられます";
 
-$content = json_decode($input);
-// echo $content->fullTextAnnotation->text;
-$symbolArray = array();
-$blocks = $content->fullTextAnnotation->pages[0]->blocks;
-$blocksLength = count($blocks);
-$referenceBlockFront=NULL;
+    private $content = null;
 
-if (0 !== $blocksLength) {
-    for ($i = 0; $i < $blocksLength; $i ++) {
-        $paragraphs = $blocks[$i]->paragraphs;
-        $paragraphsLength = count($paragraphs);
+    const frontText = "~住所意思腸眼肝腎及小";
+
+    const backText = "~拾得手数下禁認項時付";
+
+    function __construct()
+    {
+        $this->content = json_decode($this->input);
+    }
+
+    function __construct1(String $input)
+    {
+        $this->content = json_decode($input);
+    }
+
+    public function getSimple()
+    {
+        return $this->content;
+    }
+
+    public function getSimplePage()
+    {
+        return $this->content->fullTextAnnotation->pages[0];
+    }
+
+    public function getSimpleBlocks()
+    {
+        return $this->content->fullTextAnnotation->pages[0]->blocks;
+    }
+
+    public function getSimpleSymbols()
+    {
+        $symbolArray = array();
+        $blocks = $this->getSimpleBlocks();
+        $blocksLength = count($blocks);
         
-        if (0 !== $paragraphsLength) {
-            for ($p = 0; $p < $paragraphsLength; $p ++) {
-                $words = $paragraphs[$p]->words;
-                $wordsLength = count($words);
+        if (0 !== $blocksLength) {
+            for ($i = 0; $i < $blocksLength; $i ++) {
+                $paragraphs = $blocks[$i]->paragraphs;
+                $paragraphsLength = count($paragraphs);
                 
-                if (0 !== $wordsLength) {
-                    for ($w = 0; $w < $wordsLength; $w ++) {
-                        $symbols = $words[$w]->symbols;
-                        $symbolsLength = count($symbols);
+                if (0 !== $paragraphsLength) {
+                    for ($p = 0; $p < $paragraphsLength; $p ++) {
+                        $words = $paragraphs[$p]->words;
+                        $wordsLength = count($words);
                         
-                        if (0 !== $symbols) {
-                            for ($s = 0; $s < $symbolsLength; $s ++) {
-                                $symbolArray[] = $symbols[$s];
-                                $vertices = $symbols[$s]->boundingBox->vertices;
-                                $text = $symbols[$s]->text;
+                        if (0 !== $wordsLength) {
+                            for ($w = 0; $w < $wordsLength; $w ++) {
+                                $symbols = $words[$w]->symbols;
+                                $symbolsLength = count($symbols);
                                 
-                                // echo $text . " (";
-                                // for ($v = 0; $v < count($vertices); $v ++) {
-                                // echo $vertices[$v]->x . "." . $vertices[$v]->y;
-                                // if (3 !== $v) {
-                                // echo "|";
-                                // }
-                                // }
-                                // echo ")" . PHP_EOL;
+                                if (0 !== $symbols) {
+                                    for ($s = 0; $s < $symbolsLength; $s ++) {
+                                        $symbolArray[] = $symbols[$s];
+                                    }
+                                } else {
+                                    echo "word[" . $w . "] have no symbol";
+                                }
                             }
                         } else {
-                            echo "word[" . $w . "] have no symbol";
+                            echo "paragraph[" . $p . "] have no word";
                         }
                     }
                 } else {
-                    echo "paragraph[" . $p . "] have no word";
+                    echo "block[" . $i . "] have no paragraph";
                 }
             }
         } else {
-            echo "block[" . $i . "] have no paragraph";
+            echo "white paper";
         }
         
-        // $vertices = $blocks[$i]->boundingBox->vertices;
-        // $leftUpX = $vertices[0]->x;
-        // $leftUpY = $vertices[0]->y;
-        // $leftDownX = $vertices[1]->x;
-        // $leftDownY = $vertices[1]->y;
-        // $rightDownX = $vertices[2]->x;
-        // $rightDownY = $vertices[2]->y;
-        // $rightUpX = $vertices[3]->x;
-        // $rightUpY = $vertices[3]->y;
-        
-        // $xUp = $rightUpX - $leftUpX;
-        // $yUp = $rightUpY - $leftUpY;
-        // $slantingUp = sqrt($xUp * $xUp + $yUp * $yUp);
-        // $sinUp = (abs($xUp) < abs($yUp) ? $xUp : $yUp) / $slantingUp;
-        // // echo "block" . $i . "Up=" . $sinUp . PHP_EOL;
-        
-        // $xDown = $rightDownX - $leftDownX;
-        // $yDown = $rightDownY - $leftDownY;
-        // $slantingDown = sqrt($xDown * $xDown + $yDown * $yDown);
-        // $sinDown = (abs($xDown) < abs($yDown) ? $xDown : $yDown) / $slantingDown;
-        // // echo "block" . $i . "Down=" . $sinDown . PHP_EOL;
-        
-        // echo "block" . $i . "calculate=" . abs($sinUp - $sinDown) . PHP_EOL;
+        return $symbolArray;
     }
-} else {
-    echo "white paper";
-}
 
-// 正面、裏面、両面ともか
-$side = checkSide($symbolArray);
-echo "isSide:" . $side . PHP_EOL;
-
-// 正面を認識する基準点
-$referenceSymbolFront = referenceSymbolFront($symbolArray);
-echo "referenceSymbolFront:" . $referenceSymbolFront->text . "->" . $referenceSymbolFront->confidence . PHP_EOL;
-
-// 裏面を認識する基準点
-$referenceSymbolBack = referenceSymbolBack($symbolArray);
-echo "referenceSymbolBack:" . $referenceSymbolBack->text . "->" . $referenceSymbolBack->confidence . PHP_EOL;
-
-// 正面の位置情報
-
-// 裏面の位置情報
-
-
-$numberArea = numberAreaLeft($referencePointBack);
-
-$symbolLength = symbolLength($referencePointBack);
-
-function checkSide($symbolArray)
-{
-    $frontText = "~住所意思腸眼肝腎及小";
-    $backText = "~拾得手数下禁認項時付";
-    $isFront = 0;
-    $isBack = 0;
-    for ($a = 0; $a < count($symbolArray); $a ++) {
-        if (strpos($frontText, $symbolArray[$a]->text)) {
-            $isFront ++;
-            // echo "front" . $symbolArray[$a]->text;
-        } elseif (strpos($backText, $symbolArray[$a]->text)) {
-            $isBack ++;
-            // echo "back" . $symbolArray[$a]->text . PHP_EOL;
-        }
-    }
-    // echo $isFront . "+" . $isBack;
-    return $isFront >= 3 ? ($isBack >= 3 ? 4 : 1) : ($isBack >= 3 ? 2 : 0);
-}
-
-function referenceSymbolFront($symbolArray)
-{
-    $frontText = "~住所意思腸眼肝腎及小";
-    $isFront = 0;
-    $symbol = NULL;
-    for ($a = 0; $a < count($symbolArray); $a ++) {
-        if (strpos($frontText, $symbolArray[$a]->text)) {
-            if (NULL === $symbol || $symbolArray[$a]->confidence > $symbol->confidence) {
-                $symbol = $symbolArray[$a];
+    public function getReferenceDegree($referenceText)
+    {
+        $blocks = $this->getSimpleBlocks();
+        $blocksLength = count($blocks);
+        
+        if (0 !== $blocksLength) {
+            for ($i = 0; $i < $blocksLength; $i ++) {
+                $paragraphs = $blocks[$i]->paragraphs;
+                $paragraphsLength = count($paragraphs);
+                
+                if (0 !== $paragraphsLength) {
+                    for ($p = 0; $p < $paragraphsLength; $p ++) {
+                        $words = $paragraphs[$p]->words;
+                        $wordsLength = count($words);
+                        
+                        if (0 !== $wordsLength) {
+                            for ($w = 0; $w < $wordsLength; $w ++) {
+                                $symbols = $words[$w]->symbols;
+                                $symbolsLength = count($symbols);
+                                
+                                if (0 !== $symbols) {
+                                    for ($s = 0; $s < $symbolsLength; $s ++) {
+                                        if ($symbols[$s]->text === $referenceText) {
+                                            $triangle = new Triangle(new Axis($blocks[$i]->boundingBox->vertices[0]), new Axis($blocks[$i]->boundingBox->vertices[1]));
+                                            return $triangle->getSin();
+                                        }
+                                        
+                                        $symbolArray[] = $symbols[$s];
+                                    }
+                                } else {
+                                    echo "word[" . $w . "] have no symbol";
+                                }
+                            }
+                        } else {
+                            echo "paragraph[" . $p . "] have no word";
+                        }
+                    }
+                } else {
+                    echo "block[" . $i . "] have no paragraph";
+                }
             }
-            $isFront ++;
-            // echo "front" . $symbolArray[$a]->text;
+        } else {
+            echo "white paper";
         }
     }
-    // echo $isFront . "+" . $isBack;
-    return $isFront >= 3 ? $symbol : NULL;
-}
 
-function referenceSymbolBack($symbolArray)
-{
-    $backText = "~拾得手数下禁認項時付";
-    $isBack = 0;
-    $symbol = NULL;
-    for ($a = 0; $a < count($symbolArray); $a ++) {
-        if (strpos($backText, $symbolArray[$a]->text)) {
-            if (NULL === $symbol || $symbolArray[$a]->confidence > $symbol->confidence) {
-                $symbol = $symbolArray[$a];
+    public function referenceSymbolFront()
+    {
+        $symboles = $this->getSimpleSymbols();
+        $isFront = 0;
+        $symbol = null;
+        for ($i = 0; $i < count($symboles); $i ++) {
+            if (strpos(self::frontText, $symboles[$i]->text)) {
+                if (null === $symbol || $symboles[$i]->confidence > $symbol->confidence) {
+                    $symbol = $symboles[$i];
+                }
+                $isFront ++;
             }
-            $isBack ++;
-            // echo "back" . $symbolArray[$a]->text . PHP_EOL;
         }
+        echo "Matching front " . $isFront . "times." . PHP_EOL;
+        return $isFront >= 3 ? $symbol : NULL;
     }
-    // echo $isFront . "+" . $isBack;
-    return $isBack >= 3 ? $symbol : NULL;
-}
 
-function symbolLength($symbol)
-{
-    $up = sqrt(($symbol->boundingBox->vertices[1]->x - $symbol->boundingBox->vertices[0]->x) * ($symbol->boundingBox->vertices[1]->x - $symbol->boundingBox->vertices[0]->x) + ($symbol->boundingBox->vertices[1]->y - $symbol->boundingBox->vertices[0]->y) * ($symbol->boundingBox->vertices[1]->y - $symbol->boundingBox->vertices[0]->y));
-    $right = sqrt(($symbol->boundingBox->vertices[2]->x - $symbol->boundingBox->vertices[1]->x) * ($symbol->boundingBox->vertices[2]->x - $symbol->boundingBox->vertices[1]->x) + ($symbol->boundingBox->vertices[2]->y - $symbol->boundingBox->vertices[1]->y) * ($symbol->boundingBox->vertices[2]->y - $symbol->boundingBox->vertices[1]->y));
-    $down = sqrt(($symbol->boundingBox->vertices[3]->x - $symbol->boundingBox->vertices[2]->x) * ($symbol->boundingBox->vertices[3]->x - $symbol->boundingBox->vertices[2]->x) + ($symbol->boundingBox->vertices[3]->y - $symbol->boundingBox->vertices[2]->y) * ($symbol->boundingBox->vertices[3]->y - $symbol->boundingBox->vertices[2]->y));
-    $left = sqrt(($symbol->boundingBox->vertices[0]->x - $symbol->boundingBox->vertices[3]->x) * ($symbol->boundingBox->vertices[0]->x - $symbol->boundingBox->vertices[3]->x) + ($symbol->boundingBox->vertices[0]->y - $symbol->boundingBox->vertices[3]->y) * ($symbol->boundingBox->vertices[0]->y - $symbol->boundingBox->vertices[3]->y));
-    
-    echo $up . "|" . $right . "|" . $down . "|" . $left . PHP_EOL;
-    
-    return array(
-        max(abs($up), abs($down)),
-        max(abs($right), abs($left))
-    );
-}
-
-function frontDegree($block)
-{
-    $up = sqrt(($symbol->boundingBox->vertices[1]->x - $symbol->boundingBox->vertices[0]->x) * ($symbol->boundingBox->vertices[1]->x - $symbol->boundingBox->vertices[0]->x) + ($symbol->boundingBox->vertices[1]->y - $symbol->boundingBox->vertices[0]->y) * ($symbol->boundingBox->vertices[1]->y - $symbol->boundingBox->vertices[0]->y));
-    $right = sqrt(($symbol->boundingBox->vertices[2]->x - $symbol->boundingBox->vertices[1]->x) * ($symbol->boundingBox->vertices[2]->x - $symbol->boundingBox->vertices[1]->x) + ($symbol->boundingBox->vertices[2]->y - $symbol->boundingBox->vertices[1]->y) * ($symbol->boundingBox->vertices[2]->y - $symbol->boundingBox->vertices[1]->y));
-    $down = sqrt(($symbol->boundingBox->vertices[3]->x - $symbol->boundingBox->vertices[2]->x) * ($symbol->boundingBox->vertices[3]->x - $symbol->boundingBox->vertices[2]->x) + ($symbol->boundingBox->vertices[3]->y - $symbol->boundingBox->vertices[2]->y) * ($symbol->boundingBox->vertices[3]->y - $symbol->boundingBox->vertices[2]->y));
-    $left = sqrt(($symbol->boundingBox->vertices[0]->x - $symbol->boundingBox->vertices[3]->x) * ($symbol->boundingBox->vertices[0]->x - $symbol->boundingBox->vertices[3]->x) + ($symbol->boundingBox->vertices[0]->y - $symbol->boundingBox->vertices[3]->y) * ($symbol->boundingBox->vertices[0]->y - $symbol->boundingBox->vertices[3]->y));
-    
-    echo $up . "|" . $right . "|" . $down . "|" . $left . PHP_EOL;
-    
-    return array(
-        max(abs($up), abs($down)),
-        max(abs($right), abs($left))
-    );
-}
-
-function numberAreaLeft($symbol)
-{
-    $x0 = $symbol->boundingBox->vertices[0]->x;
-    $y0 = $symbol->boundingBox->vertices[0]->y;
-    $x1 = $symbol->boundingBox->vertices[1]->x;
-    $y1 = $symbol->boundingBox->vertices[1]->y;
-    $x2 = $symbol->boundingBox->vertices[2]->x;
-    $y2 = $symbol->boundingBox->vertices[2]->y;
-    $x3 = $symbol->boundingBox->vertices[3]->x;
-    $y3 = $symbol->boundingBox->vertices[3]->y;
-    echo "->" . $x0 . "->" . $y0 . "->" . $x1 . "->" . $y1 . "->" . $x2 . "->" . $y2 . "->" . $x3 . "->" . $y3 . "->" . PHP_EOL;
-    
-    echo "resultX0:";
-    $resultX0 = $symbol->boundingBox->vertices[0]->x - ($symbol->boundingBox->vertices[3]->x - $symbol->boundingBox->vertices[0]->x) * 9.5;
-    echo $resultX0 . PHP_EOL;
-    echo "resultY0:";
-    $resultY0 = $symbol->boundingBox->vertices[0]->y - ($symbol->boundingBox->vertices[3]->y - $symbol->boundingBox->vertices[0]->y) * 9.5;
-    echo $resultY0 . PHP_EOL;
-    
-    echo "resultX1:";
-    $resultX1 = $resultX0 + ($symbol->boundingBox->vertices[1]->x - $symbol->boundingBox->vertices[0]->x) * 47;
-    echo $resultX1 . PHP_EOL;
-    echo "resultY1:";
-    $resultY1 = $resultY0 + ($symbol->boundingBox->vertices[1]->y - $symbol->boundingBox->vertices[0]->y) * 47;
-    echo $resultY1 . PHP_EOL;
-    
-    echo "resultX3:";
-    $resultX3 = $symbol->boundingBox->vertices[0]->x - ($symbol->boundingBox->vertices[3]->x - $symbol->boundingBox->vertices[0]->x) * 6;
-    echo $resultX3 . PHP_EOL;
-    $resultY3 = $symbol->boundingBox->vertices[0]->y - ($symbol->boundingBox->vertices[3]->y - $symbol->boundingBox->vertices[0]->y) * 6;
-    echo "resultY3:";
-    echo $resultY3 . PHP_EOL;
-    echo "end" . PHP_EOL;
-    
-    echo $symbol->boundingBox->vertices[0]->x - $symbol->boundingBox->vertices[1]->x . PHP_EOL;
-    echo $symbol->boundingBox->vertices[0]->y - $symbol->boundingBox->vertices[1]->y . PHP_EOL;
-    echo $symbol->boundingBox->vertices[1]->x - $symbol->boundingBox->vertices[2]->x . PHP_EOL;
-    echo $symbol->boundingBox->vertices[1]->y - $symbol->boundingBox->vertices[2]->y . PHP_EOL;
-    echo $symbol->boundingBox->vertices[2]->x - $symbol->boundingBox->vertices[3]->x . PHP_EOL;
-    echo $symbol->boundingBox->vertices[2]->y - $symbol->boundingBox->vertices[3]->y . PHP_EOL;
-    echo $symbol->boundingBox->vertices[3]->x - $symbol->boundingBox->vertices[0]->x . PHP_EOL;
-    echo $symbol->boundingBox->vertices[3]->y - $symbol->boundingBox->vertices[0]->y . PHP_EOL;
-    
-    $vertices = $symbol->boundingBox->vertices;
+    public function referenceSymbolBack()
+    {
+        $symboles = $this->getSimpleSymbols();
+        $isBack = 0;
+        $symbol = null;
+        for ($a = 0; $a < count($symboles); $a ++) {
+            if (strpos(self::backText, $symboles[$a]->text)) {
+                if (null === $symbol || $symboles[$a]->confidence > $symbol->confidence) {
+                    $symbol = $symboles[$a];
+                }
+                $isBack ++;
+            }
+        }
+        echo "Matching back " . $isBack . "times." . PHP_EOL;
+        return $isBack >= 3 ? $symbol : NULL;
+    }
 }
