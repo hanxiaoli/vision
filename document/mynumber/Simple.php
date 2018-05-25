@@ -16352,7 +16352,7 @@ class Simple
         $this->content = json_decode($this->input);
     }
 
-    function __construct1(String $input)
+    function __construct1($input)
     {
         $this->content = json_decode($input);
     }
