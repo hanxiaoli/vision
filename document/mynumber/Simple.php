@@ -16462,7 +16462,7 @@ class Simple
         }
     }
 
-    public function referenceSymbolFront()
+    public function getReferenceSymbolFront()
     {
         $symboles = $this->getSimpleSymbols();
         $isFront = 0;
@@ -16479,7 +16479,7 @@ class Simple
         return $isFront >= 3 ? $symbol : NULL;
     }
 
-    public function referenceSymbolBack()
+    public function getReferenceSymbolBack()
     {
         $symboles = $this->getSimpleSymbols();
         $isBack = 0;
