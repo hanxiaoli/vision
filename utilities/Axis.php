@@ -13,16 +13,22 @@ class Axis
     function __construct()
     {}
 
-    function __construct1($horizontal, $vertical)
+    public static function withXY($horizontal, $vertical)
     {
-        $this->x = $horizontal;
-        $this->y = $vertical;
+        $instance = new self();
+        $instance->setX($horizontal);
+        $instance->setY($vertical);
+        
+        return $instance;
     }
 
-    function __construct2($googleCloudVisionVertex)
+    public static function withVertex($googleCloudVisionVertex)
     {
-        $this->x = $googleCloudVisionVertex->x;
-        $this->y = $googleCloudVisionVertex->y;
+        $instance = new self();
+        $instance->setX($googleCloudVisionVertex->x);
+        $instance->setY($googleCloudVisionVertex->y);
+        
+        return $instance;
     }
 
     public function setX($x)

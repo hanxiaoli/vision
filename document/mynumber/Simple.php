@@ -1,6 +1,4 @@
 <?php
-require_once '../../utilities/Axis.php';
-require_once '../../utilities/Triangle.php';
 
 class Simple
 {
@@ -16439,7 +16437,7 @@ class Simple
                                 if (0 !== $symbols) {
                                     for ($s = 0; $s < $symbolsLength; $s ++) {
                                         if ($symbols[$s]->text === $referenceText) {
-                                            $triangle = new Triangle(new Axis($blocks[$i]->boundingBox->vertices[0]), new Axis($blocks[$i]->boundingBox->vertices[1]));
+                                            $triangle = Triangle::withAxis(Axis::withVertex($blocks[$i]->boundingBox->vertices[0]), Axis::withVertex($blocks[$i]->boundingBox->vertices[1]));
                                             return $triangle->getSin();
                                         }
                                         

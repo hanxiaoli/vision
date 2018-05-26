@@ -9,16 +9,52 @@ class Triangle
 
     private $adjacent = null;
 
-    function __construct(Axis $pointLeft, Axis $pointRight)
+    function __construct()
+    {}
+
+    public static function withAxis(Axis $pointLeft, Axis $pointRight)
     {
-        $this->opposite = $pointRight->x - $pointLeft->x;
-        $this->adjacent = $pointRight->y - $pointLeft->y;
-        $this->adjacent = sqrt($this->adjacent * $this->adjacent + $this->opposite * $this->opposite);
+        $instance = new self();
+        $instance->setOpposite($pointRight->getX() - $pointLeft->getX());
+        $instance->setAdjacent($pointRight->getY() - $pointLeft->getY());
+        $instance->setHypotenuse(sqrt($instance->adjacent * $instance->adjacent + $instance->opposite * $instance->opposite));
+        
+        return $instance;
     }
 
     public function getSin()
     {
         return $this->opposite / $this->hypotenuse;
+    }
+
+    public function setHypotenuse($hypotenuse)
+    {
+        $this->hypotenuse = $hypotenuse;
+    }
+
+    public function getHypotenuse()
+    {
+        return $this->hypotenuse;
+    }
+
+    public function setOpposite($opposite)
+    {
+        $this->opposite = $opposite;
+    }
+
+    public function getOpposite()
+    {
+        return $this->opposite;
+    }
+
+    public function setAdjacent($adjacent)
+    {
+        $this->adjacent = $adjacent;
+    }
+
+    public function getAdjacent()
+    {
+        return $this->adjacent;
     }
 }
 
