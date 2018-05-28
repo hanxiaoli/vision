@@ -16341,18 +16341,14 @@ class Simple
 
     private $content = null;
 
-    const frontText = "~住所意思腸眼肝腎及小";
-
-    const backText = "~拾得手数下禁認項時付";
-
     function __construct()
     {
         $this->content = json_decode($this->input);
     }
 
-    function __construct1($input)
+    public function setSimple($content)
     {
-        $this->content = json_decode($input);
+        $this->content = $content;
     }
 
     public function getSimple()
@@ -16460,37 +16456,20 @@ class Simple
         }
     }
 
-    public function getReferenceSymbolFront()
+    public function getReferenceSymbol($matchText)
     {
         $symboles = $this->getSimpleSymbols();
-        $isFront = 0;
+        $matchingTimes = 0;
         $symbol = null;
         for ($i = 0; $i < count($symboles); $i ++) {
-            if (strpos(self::frontText, $symboles[$i]->text)) {
+            if (strpos($matchText, $symboles[$i]->text)) {
                 if (null === $symbol || $symboles[$i]->confidence > $symbol->confidence) {
                     $symbol = $symboles[$i];
                 }
-                $isFront ++;
+                $matchingTimes ++;
             }
         }
-        echo "Matching front " . $isFront . "times." . PHP_EOL;
-        return $isFront >= 3 ? $symbol : NULL;
-    }
-
-    public function getReferenceSymbolBack()
-    {
-        $symboles = $this->getSimpleSymbols();
-        $isBack = 0;
-        $symbol = null;
-        for ($a = 0; $a < count($symboles); $a ++) {
-            if (strpos(self::backText, $symboles[$a]->text)) {
-                if (null === $symbol || $symboles[$a]->confidence > $symbol->confidence) {
-                    $symbol = $symboles[$a];
-                }
-                $isBack ++;
-            }
-        }
-        echo "Matching back " . $isBack . "times." . PHP_EOL;
-        return $isBack >= 3 ? $symbol : NULL;
+        echo "Matching front " . $matchingTimes . "times." . PHP_EOL;
+        return $matchingTimes >= 3 ? $symbol : NULL;
     }
 }
