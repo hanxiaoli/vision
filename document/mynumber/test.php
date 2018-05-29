@@ -16343,7 +16343,7 @@ $content = json_decode($input);
 $symbolArray = array();
 $blocks = $content->fullTextAnnotation->pages[0]->blocks;
 $blocksLength = count($blocks);
-$referenceBlockFront=NULL;
+$referenceBlockFront = NULL;
 
 if (0 !== $blocksLength) {
     for ($i = 0; $i < $blocksLength; $i ++) {
@@ -16430,7 +16430,6 @@ echo "referenceSymbolBack:" . $referenceSymbolBack->text . "->" . $referenceSymb
 // 正面の位置情報
 
 // 裏面の位置情報
-
 
 $numberArea = numberAreaLeft($referencePointBack);
 

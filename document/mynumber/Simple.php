@@ -16410,7 +16410,7 @@ class Simple
         return $symbolArray;
     }
 
-    public function getReferenceDegree($referenceText)
+    public function referenceTriangle($referenceText)
     {
         $blocks = $this->getSimpleBlocks();
         $blocksLength = count($blocks);
@@ -16434,7 +16434,7 @@ class Simple
                                     for ($s = 0; $s < $symbolsLength; $s ++) {
                                         if ($symbols[$s]->text === $referenceText) {
                                             $triangle = Triangle::withAxis(Axis::withVertex($blocks[$i]->boundingBox->vertices[0]), Axis::withVertex($blocks[$i]->boundingBox->vertices[1]));
-                                            return $triangle->getSin();
+                                            return $triangle;
                                         }
                                         
                                         $symbolArray[] = $symbols[$s];
@@ -16456,7 +16456,7 @@ class Simple
         }
     }
 
-    public function getReferenceSymbol($matchText)
+    public function referenceSymbol($matchText)
     {
         $symboles = $this->getSimpleSymbols();
         $matchingTimes = 0;
@@ -16469,7 +16469,24 @@ class Simple
                 $matchingTimes ++;
             }
         }
-        echo "Matching front " . $matchingTimes . "times." . PHP_EOL;
+        echo "Matching front " . $matchingTimes . " times." . PHP_EOL;
         return $matchingTimes >= 3 ? $symbol : NULL;
     }
+    
+//     public function referenceWidth($matchText)
+//     {
+//         $symboles = $this->getSimpleSymbols();
+//         $matchingTimes = 0;
+//         $symbol = null;
+//         for ($i = 0; $i < count($symboles); $i ++) {
+//             if (strpos($matchText, $symboles[$i]->text)) {
+//                 if (null === $symbol || $symboles[$i]->confidence > $symbol->confidence) {
+//                     $symbol = $symboles[$i];
+//                 }
+//                 $matchingTimes ++;
+//             }
+//         }
+//         echo "Matching front " . $matchingTimes . " times." . PHP_EOL;
+//         return $matchingTimes >= 3 ? $symbol : NULL;
+//     }
 }

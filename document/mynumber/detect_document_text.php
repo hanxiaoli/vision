@@ -16,6 +16,7 @@
  */
 // [START vision_fulltext_detection]
 namespace Google\Cloud\Samples\Vision;
+
 require __DIR__ . '/../../vendor/autoload.php';
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
