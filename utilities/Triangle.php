@@ -27,8 +27,30 @@ class Triangle
         $instance->setAdjacent($pointRight->getX() - $pointLeft->getX());
         $instance->setOpposite($pointRight->getY() - $pointLeft->getY());
         $instance->setHypotenuse(sqrt($instance->adjacent * $instance->adjacent + $instance->opposite * $instance->opposite));
-        
         return $instance;
+    }
+
+    // 构造函数
+    public static function withLine($adjacent, $opposite, $pointLeft, $pointRight)
+    {
+        $instance = new self();
+        $instance->adjacent = $adjacent;
+        $instance->opposite = $opposite;
+        
+        if (null === $pointLeft && null !== $pointRight) {
+            $instance->pointRight = $pointRight;
+            $instance->pointLeft = Axis::withXY($pointRight->getX() - $instance->adjacent, $pointRight->getY() - $instance->opposite);
+            
+            return $instance;
+        } else if (null !== $pointLeft && null === $pointRight) {
+            $instance->pointLeft = $pointLeft;
+            $instance->pointRight = Axis::withXY($pointLeft->getX() + $instance->adjacent, $pointRight->getY() + $instance->opposite);
+            
+            return $instance;
+        } else {
+            echo "create triangle with line was wrong";
+            return null;
+        }
     }
 
     // 取正弦

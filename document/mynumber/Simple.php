@@ -16473,20 +16473,4 @@ class Simple
         return $matchingTimes >= 3 ? $symbol : NULL;
     }
     
-//     public function referenceWidth($matchText)
-//     {
-//         $symboles = $this->getSimpleSymbols();
-//         $matchingTimes = 0;
-//         $symbol = null;
-//         for ($i = 0; $i < count($symboles); $i ++) {
-//             if (strpos($matchText, $symboles[$i]->text)) {
-//                 if (null === $symbol || $symboles[$i]->confidence > $symbol->confidence) {
-//                     $symbol = $symboles[$i];
-//                 }
-//                 $matchingTimes ++;
-//             }
-//         }
-//         echo "Matching front " . $matchingTimes . " times." . PHP_EOL;
-//         return $matchingTimes >= 3 ? $symbol : NULL;
-//     }
 }
