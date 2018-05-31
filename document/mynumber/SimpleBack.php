@@ -49,30 +49,8 @@ class SimpleBack extends Simple
                 $this->mynumberArea = $this->mynumberAreaByMitome();
             }
         }
-        $symbols = $this->getSimpleSymbols();
-        $symbolsLength = count($symbols);
-        $startSymbol = null;
-        $starLength = null;
-        $endSymbol = null;
-        $endLength = null;
-        for ($i = 0; $i < $symbolsLength; $i ++) {
-            $thisLengthFromStart = abs(Triangle::withAxis($this->mynumberArea[0], Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
-            $thisLengthFromEnd = abs(Triangle::withAxis(Axis::withVertex($symbols[$i]->boundingBox->vertices[1]), $this->mynumberArea[1])->getHypotenuse());
-            
-            if (null === $starLength or $starLength >= $thisLengthFromStart) {
-                $startSymbol = $symbols[$i];
-                $starLength = $thisLengthFromStart;
-            }
-            
-            if (null === $endLength or $endLength >= $thisLengthFromEnd) {
-                $endSymbol = $symbols[$i];
-                $endLength = $thisLengthFromEnd;
-            }
-        }
         
-        for ($i = 0; $i < $symbolsLength; $i ++) {
-            // TODO
-        }
+        $this->mynumber = $this->getObjectByRange($this->mynumberArea, $this->referenceSymbol);
         
         echo "Mynumber:" . $this->mynumber . PHP_EOL;
         

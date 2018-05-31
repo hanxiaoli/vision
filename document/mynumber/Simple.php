@@ -16340,6 +16340,8 @@ class Simple
 ';
 
     private $content = null;
+    
+    private $simpleSymbols=null;
 
     function __construct()
     {
@@ -16368,6 +16370,10 @@ class Simple
 
     public function getSimpleSymbols()
     {
+        if (null!==$this->simpleSymbols) {
+            return $this->simpleSymbols;
+        }
+        
         $symbolArray = array();
         $blocks = $this->getSimpleBlocks();
         $blocksLength = count($blocks);
@@ -16407,7 +16413,8 @@ class Simple
             echo "white paper";
         }
         
-        return $symbolArray;
+        $this->simpleSymbols = $symbolArray;
+        return $this->simpleSymbols;
     }
 
     public function referenceTriangle($referenceText)
@@ -16471,6 +16478,72 @@ class Simple
         }
         echo "Matching front " . $matchingTimes . " times." . PHP_EOL;
         return $matchingTimes >= 3 ? $symbol : NULL;
+    }
+    
+//     public function filteredSymbols(Array $area){
+//         $arrayX=array($area[0]->getX(),$area[1]->getX(),$area[2]->getX(),$area[3]->getX());
+//         $arrayY=array($area[0]->getY(),$area[1]->getY(),$area[2]->getY(),$area[3]->getY());
+        
+//         $maxX = max($arrayX);
+//         $maxY = max($arrayY);
+//         $minX = min($arrayX);
+//         $minY = min($arrayY);
+//     }
+    
+    public function getObjectByRange(Array $area, $referenceSymbol)
+    {
+        $obj = null;
+        
+        $symbols = $this->getSimpleSymbols();
+        $symbolsLength = count($symbols);
+        $startSymbol = null;
+        $starLength = null;
+        $endSymbol = null;
+        $endLength = null;
+        for ($i = 0; $i < $symbolsLength; $i ++) {
+            $startTriangle = Triangle::withAxis($area[0], Axis::withVertex($symbols[$i]->boundingBox->vertices[0]));
+            $endTriangle = Triangle::withAxis(Axis::withVertex($symbols[$i]->boundingBox->vertices[1]), $area[1]);
+            
+            $thisLengthFromStart = abs(Triangle::withAxis($area[0], Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
+            $thisLengthFromEnd = abs(Triangle::withAxis(Axis::withVertex($symbols[$i]->boundingBox->vertices[1]), $area[1])->getHypotenuse());
+            
+            if (null === $starLength or $starLength >= $thisLengthFromStart) {
+                
+                if ("■"==$symbols[$i]->text) {
+                    
+                } else {
+                    $startSymbol = &$symbols[$i];
+                    $starLength = $thisLengthFromStart;
+                }
+            }
+            
+            if (null === $endLength or $endLength >= $thisLengthFromEnd) {
+                $endSymbol = &$symbols[$i];
+                $endLength = $thisLengthFromEnd;
+            }
+        }
+        
+        $obj .= $startSymbol->text;
+        
+        while($startSymbol!==$endSymbol) {
+            $previousSymbol = $startSymbol;
+            $starLength=null;
+            for ($i = 0; $i < $symbolsLength; $i ++) {
+                if ($startSymbol==$symbols[$i]) {
+                    continue;
+                }
+                $thisLengthFromStart = abs(Triangle::withAxis(Axis::withVertex($startSymbol->boundingBox->vertices[1]), Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
+                
+                if (null === $starLength or $starLength >= $thisLengthFromStart) {
+                    $previousSymbol = &$symbols[$i];
+                    $starLength = $thisLengthFromStart;
+                }
+            }
+            $startSymbol = &$previousSymbol;
+            
+            $obj .= $startSymbol->text;
+        }
+        return $obj;
     }
     
 }
