@@ -16340,8 +16340,8 @@ class Simple
 ';
 
     private $content = null;
-    
-    private $simpleSymbols=null;
+
+    private $simpleSymbols = null;
 
     function __construct()
     {
@@ -16370,7 +16370,7 @@ class Simple
 
     public function getSimpleSymbols()
     {
-        if (null!==$this->simpleSymbols) {
+        if (null !== $this->simpleSymbols) {
             return $this->simpleSymbols;
         }
         
@@ -16479,17 +16479,16 @@ class Simple
         echo "Matching front " . $matchingTimes . " times." . PHP_EOL;
         return $matchingTimes >= 3 ? $symbol : NULL;
     }
+
+    // public function filteredSymbols(Array $area){
+    // $arrayX=array($area[0]->getX(),$area[1]->getX(),$area[2]->getX(),$area[3]->getX());
+    // $arrayY=array($area[0]->getY(),$area[1]->getY(),$area[2]->getY(),$area[3]->getY());
     
-//     public function filteredSymbols(Array $area){
-//         $arrayX=array($area[0]->getX(),$area[1]->getX(),$area[2]->getX(),$area[3]->getX());
-//         $arrayY=array($area[0]->getY(),$area[1]->getY(),$area[2]->getY(),$area[3]->getY());
-        
-//         $maxX = max($arrayX);
-//         $maxY = max($arrayY);
-//         $minX = min($arrayX);
-//         $minY = min($arrayY);
-//     }
-    
+    // $maxX = max($arrayX);
+    // $maxY = max($arrayY);
+    // $minX = min($arrayX);
+    // $minY = min($arrayY);
+    // }
     public function getObjectByRange(Array $area, $referenceSymbol)
     {
         $obj = null;
@@ -16509,9 +16508,7 @@ class Simple
             
             if (null === $starLength or $starLength >= $thisLengthFromStart) {
                 
-                if ("■"==$symbols[$i]->text) {
-                    
-                } else {
+                if ("■" == $symbols[$i]->text) {} else {
                     $startSymbol = &$symbols[$i];
                     $starLength = $thisLengthFromStart;
                 }
@@ -16525,11 +16522,11 @@ class Simple
         
         $obj .= $startSymbol->text;
         
-        while($startSymbol!==$endSymbol) {
+        while ($startSymbol !== $endSymbol) {
             $previousSymbol = $startSymbol;
-            $starLength=null;
+            $starLength = null;
             for ($i = 0; $i < $symbolsLength; $i ++) {
-                if ($startSymbol==$symbols[$i]) {
+                if ($startSymbol == $symbols[$i]) {
                     continue;
                 }
                 $thisLengthFromStart = abs(Triangle::withAxis(Axis::withVertex($startSymbol->boundingBox->vertices[1]), Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
@@ -16545,5 +16542,4 @@ class Simple
         }
         return $obj;
     }
-    
 }
