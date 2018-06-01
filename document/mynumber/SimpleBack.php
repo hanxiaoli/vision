@@ -31,7 +31,7 @@ class SimpleBack extends Simple
     }
 
     // 构造函数
-    public static function withSimple($content)
+    public static function withSimple($annotation)
     {
         $instance = new self();
         $instance->referenceSymbol = $instance->referenceSymbol(self::backText);

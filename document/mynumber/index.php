@@ -1,9 +1,16 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
-require 'Simple.php';
+require_once 'utilities/Axis.php';
+require_once 'utilities/Triangle.php';
+require_once 'document/mynumber/Simple.php';
+
+// require_once 'document/mynumber/SimpleFront.php';
+// require_once 'document/mynumber/SimpleBack.php';
+
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 
-// $path = 'path/to/your/image.jpg'
+$path = 'C:/Users/base/Desktop/calculate/1_bw.jpg';
+
 function detect_document_text($path)
 {
     $imageAnnotator = new ImageAnnotatorClient();
@@ -11,34 +18,11 @@ function detect_document_text($path)
     $image = file_get_contents($path);
     $response = $imageAnnotator->documentTextDetection($image);
     $annotation = $response->getFullTextAnnotation();
-    // print out detailed and structured information about document text
-    if ($annotation) {
-        foreach ($annotation->getPages() as $page) {
-            foreach ($page->getBlocks() as $block) {
-                $block_text = '';
-                foreach ($block->getParagraphs() as $paragraph) {
-                    foreach ($paragraph->getWords() as $word) {
-                        foreach ($word->getSymbols() as $symbol) {
-                            $block_text .= $symbol->getText();
-                        }
-                        $block_text .= ' ';
-                    }
-                    $block_text .= "\n";
-                }
-                printf('Block content: %s', $block_text);
-                printf('Block confidence: %f' . PHP_EOL, $block->getConfidence());
-                // get bounds
-                $vertices = $block->getBoundingBox()->getVertices();
-                $bounds = [];
-                foreach ($vertices as $vertex) {
-                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
-                }
-                print('Bounds: ' . join(', ', $bounds) . PHP_EOL);
-                print(PHP_EOL);
-            }
-        }
-    } else {
-        print('No text found' . PHP_EOL);
-    }
+    
+    $simple = Simple::withAnnotation($annotation);
+    
+    echo "";
 }
 // [END vision_fulltext_detection]
+
+detect_document_text($path);
