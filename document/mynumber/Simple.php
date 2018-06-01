@@ -139,53 +139,26 @@ class Simple
         }
     }
 
-    public function getSimpleSymbols()
+    // 通过参照物取特定范围
+    public function getArea(Array $referenceArea, Axis $referencePoint)
     {
-        if (null !== $this->simpleSymbols) {
-            return $this->simpleSymbols;
-        }
+        $triangleLeftUp = Triangle::withAxis($referenceArea[0], $referencePoint);
+        $triangleRightUp = Triangle::withAxis($referenceArea[1], $referencePoint);
+        $triangleRightDown = Triangle::withAxis($referenceArea[2], $referencePoint);
+        $triangleLeftDown = Triangle::withAxis($referenceArea[3], $referencePoint);
         
-        $symbolArray = array();
-        $blocks = $this->getSimpleBlocks();
-        $blocksLength = count($blocks);
+        $area = array();
+        $area[0] = Triangle::withLine($triangleLeftUp->getAdjacent(), $triangleLeftUp->getOpposite(), null, $referenceArea[1])->getPointLeft();
+        $area[1] = Triangle::withLine($triangleRightUp->getAdjacent(), $triangleRightUp->getOpposite(), null, $referenceArea[2])->getPointLeft();
+        $area[2] = Triangle::withLine($triangleRightDown->getAdjacent(), $triangleRightDown->getOpposite(), null, $referenceArea[3])->getPointLeft();
+        $area[3] = Triangle::withLine($triangleLeftDown->getAdjacent(), $triangleLeftDown->getOpposite(), null, $referenceArea[0])->getPointLeft();
         
-        if (0 !== $blocksLength) {
-            for ($i = 0; $i < $blocksLength; $i ++) {
-                $paragraphs = $blocks[$i]->paragraphs;
-                $paragraphsLength = count($paragraphs);
-                
-                if (0 !== $paragraphsLength) {
-                    for ($p = 0; $p < $paragraphsLength; $p ++) {
-                        $words = $paragraphs[$p]->words;
-                        $wordsLength = count($words);
-                        
-                        if (0 !== $wordsLength) {
-                            for ($w = 0; $w < $wordsLength; $w ++) {
-                                $symbols = $words[$w]->symbols;
-                                $symbolsLength = count($symbols);
-                                
-                                if (0 !== $symbols) {
-                                    for ($s = 0; $s < $symbolsLength; $s ++) {
-                                        $symbolArray[] = $symbols[$s];
-                                    }
-                                } else {
-                                    echo "word[" . $w . "] have no symbol";
-                                }
-                            }
-                        } else {
-                            echo "paragraph[" . $p . "] have no word";
-                        }
-                    }
-                } else {
-                    echo "block[" . $i . "] have no paragraph";
-                }
-            }
-        } else {
-            echo "white paper";
-        }
+        echo "area [0]:" . "x=" . $area[0]->getX() . ", y=" . $area[0]->getY() . PHP_EOL;
+        echo "area [1]:" . "x=" . $area[1]->getX() . ", y=" . $area[1]->getY() . PHP_EOL;
+        echo "area [2]:" . "x=" . $area[2]->getX() . ", y=" . $area[2]->getY() . PHP_EOL;
+        echo "area [3]:" . "x=" . $area[3]->getX() . ", y=" . $area[3]->getY() . PHP_EOL;
         
-        $this->simpleSymbols = $symbolArray;
-        return $this->simpleSymbols;
+        return $area;
     }
 
     public function referenceTriangle($referenceText)
@@ -234,32 +207,6 @@ class Simple
         }
     }
 
-    public function referenceSymbol($matchText)
-    {
-        $symboles = $this->getSimpleSymbols();
-        $matchingTimes = 0;
-        $symbol = null;
-        for ($i = 0; $i < count($symboles); $i ++) {
-            if (strpos($matchText, $symboles[$i]->text)) {
-                if (null === $symbol || $symboles[$i]->confidence > $symbol->confidence) {
-                    $symbol = $symboles[$i];
-                }
-                $matchingTimes ++;
-            }
-        }
-        echo "Matching front " . $matchingTimes . " times." . PHP_EOL;
-        return $matchingTimes >= 3 ? $symbol : NULL;
-    }
-
-    // public function filteredSymbols(Array $area){
-    // $arrayX=array($area[0]->getX(),$area[1]->getX(),$area[2]->getX(),$area[3]->getX());
-    // $arrayY=array($area[0]->getY(),$area[1]->getY(),$area[2]->getY(),$area[3]->getY());
-    
-    // $maxX = max($arrayX);
-    // $maxY = max($arrayY);
-    // $minX = min($arrayX);
-    // $minY = min($arrayY);
-    // }
     public function getObjectByRange(Array $area, $referenceSymbol)
     {
         $obj = null;
@@ -453,7 +400,7 @@ class Simple
      *
      * @return boolean
      */
-    public function getHasFront()
+    public function isHasFront()
     {
         return $this->hasFront;
     }
@@ -462,12 +409,13 @@ class Simple
      *
      * @return boolean
      */
-    public function getHasBack()
+    public function isHasBack()
     {
         return $this->hasBack;
     }
 
     /**
+     *
      * @param boolean $hasFront
      */
     public function setHasFront($hasFront)
@@ -476,11 +424,11 @@ class Simple
     }
 
     /**
+     *
      * @param boolean $hasBack
      */
     public function setHasBack($hasBack)
     {
         $this->hasBack = $hasBack;
     }
-
 }

@@ -3,26 +3,67 @@
 class SimpleFront extends Simple
 {
 
-    const frontText = "~住所意思腸眼肝腎及小";
+    // 参照物对象
+    private $simple = null;
 
-    public static function withInput($input)
+    // 卡范围
+    private $cardArea = null;
+
+    // MyNumber范围
+    private $mynumberArea = null;
+
+    // MyNumber号码
+    private $mynumber = null;
+
+    // 构造函数
+    public static function withSimple(Simple $simple)
     {
         $instance = new self();
-        parent::setSimple(json_decode($input));
-        
+        $instance->simple = $simple;
         return $instance;
     }
 
-    public static function withSimple($content)
+    // 取卡的范围
+    public function cardArea()
     {
-        $instance = new self();
-        parent::setSimple($content);
-        
-        return $instance;
+        switch ($this->simple->getReferenceSymbolFront()->getText()) {
+            case "思":
+                $this->cardArea = $this->cardAreaByShi();
+                return $this->cardArea;
+            default:
+                echo "cardArea error";
+        }
     }
 
-    public function getReferenceSymbol()
+    // 通过“思”字取卡范围
+    public function cardAreaByShi()
     {
-        return parent::getReferenceSymbol(self::frontText);
+        $referenceArea = array();
+        $vertices = $this->simple->getReferenceSymbolFront()
+            ->getBoundingBox()
+            ->getVertices();
+        
+        $referenceWidth = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[1]));
+        $referenceHeight = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[3]));
+        
+        $leftX = $vertices[0]->getX() - $referenceWidth->getAdjacent() * 18;
+        $leftY = $vertices[0]->getY() - $referenceWidth->getOpposite() * 18;
+        $referenceArea[0] = Axis::withXY($leftX, $leftY);
+        
+        $upX = $vertices[0]->getX() - $referenceHeight->getAdjacent() * 16;
+        $upY = $vertices[0]->getY() - $referenceHeight->getOpposite() * 16;
+        $referenceArea[1] = Axis::withXY($upX, $upY);
+        
+        $rightX = $vertices[0]->getX() + $referenceWidth->getAdjacent() * 47;
+        $rightY = $vertices[0]->getY() + $referenceWidth->getOpposite() * 47;
+        $referenceArea[2] = Axis::withXY($rightX, $rightY);
+        
+        $downX = $vertices[0]->getX() + $referenceHeight->getAdjacent() * 11;
+        $downY = $vertices[0]->getY() + $referenceHeight->getOpposite() * 11;
+        $referenceArea[3] = Axis::withXY($downX, $downY);
+        
+        $this->cardArea = $this->simple->getArea($referenceArea, Axis::withVertex($vertices[0]));
+        
+        return $this->cardArea;
     }
 }

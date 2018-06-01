@@ -3,9 +3,6 @@
 class SimpleBack extends Simple
 {
 
-    // 参照物列表
-    const backText = "~拾得手数下禁認項時付";
-
     // 参照物对象
     private $referenceSymbol = null;
 
@@ -107,28 +104,6 @@ class SimpleBack extends Simple
         $this->mynumberArea = $this->getArea($referenceArea);
         
         return $this->mynumberArea;
-    }
-
-    // 通过参照物取特定范围
-    public function getArea(Array $referenceArea)
-    {
-        $triangleLeftUp = Triangle::withAxis($referenceArea[0], Axis::withVertex($this->referenceSymbol->boundingBox->vertices[0]));
-        $triangleRightUp = Triangle::withAxis($referenceArea[1], Axis::withVertex($this->referenceSymbol->boundingBox->vertices[0]));
-        $triangleRightDown = Triangle::withAxis($referenceArea[2], Axis::withVertex($this->referenceSymbol->boundingBox->vertices[0]));
-        $triangleLeftDown = Triangle::withAxis($referenceArea[3], Axis::withVertex($this->referenceSymbol->boundingBox->vertices[0]));
-        
-        $area = array();
-        $area[0] = Triangle::withLine($triangleLeftUp->getAdjacent(), $triangleLeftUp->getOpposite(), null, $referenceArea[1])->getPointLeft();
-        $area[1] = Triangle::withLine($triangleRightUp->getAdjacent(), $triangleRightUp->getOpposite(), null, $referenceArea[2])->getPointLeft();
-        $area[2] = Triangle::withLine($triangleRightDown->getAdjacent(), $triangleRightDown->getOpposite(), null, $referenceArea[3])->getPointLeft();
-        $area[3] = Triangle::withLine($triangleLeftDown->getAdjacent(), $triangleLeftDown->getOpposite(), null, $referenceArea[0])->getPointLeft();
-        
-        echo "area [0]:" . "x=" . $area[0]->getX() . ", y=" . $area[0]->getY() . PHP_EOL;
-        echo "area [1]:" . "x=" . $area[1]->getX() . ", y=" . $area[1]->getY() . PHP_EOL;
-        echo "area [2]:" . "x=" . $area[2]->getX() . ", y=" . $area[2]->getY() . PHP_EOL;
-        echo "area [3]:" . "x=" . $area[3]->getX() . ", y=" . $area[3]->getY() . PHP_EOL;
-        
-        return $area;
     }
 
     // 设定参照物对象
