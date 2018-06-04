@@ -27,8 +27,8 @@ class Axis
     public static function withVertex($googleCloudVisionVertex)
     {
         $instance = new self();
-        $instance->setX($googleCloudVisionVertex->x);
-        $instance->setY($googleCloudVisionVertex->y);
+        $instance->setX($googleCloudVisionVertex->getX());
+        $instance->setY($googleCloudVisionVertex->getY());
         
         return $instance;
     }

@@ -1,9 +1,9 @@
 <?php
 
-class SimpleBack extends Simple
+class SimpleBack
 {
 
-    // 参照物对象
+    // 参照物symbol
     private $referenceSymbol = null;
 
     // 卡范围
@@ -15,25 +15,33 @@ class SimpleBack extends Simple
     // MyNumber号码
     private $mynumber = null;
 
+    // // 构造函数
+    // public static function withInput($input)
+    // {
+    // $instance = new self();
+    // $instance::setSimple(json_decode($input));
+    // $instance->referenceSymbol = $instance->referenceSymbol(self::backText);
+    // echo "reference text:" . $instance->referenceSymbol->text . PHP_EOL;
+    // echo "reference confidence:" . $instance->referenceSymbol->text . PHP_EOL;
+    
+    // return $instance;
+    // }
+    
+    // // 构造函数
+    // public static function withSimple($annotation)
+    // {
+    // $instance = new self();
+    // $instance->referenceSymbol = $instance->referenceSymbol(self::backText);
+    // echo "reference text:" . $instance->referenceSymbol->text . PHP_EOL;
+    // echo "reference confidence:" . $instance->referenceSymbol->confidence . PHP_EOL;
+    // return $instance;
+    // }
+    
     // 构造函数
-    public static function withInput($input)
+    public static function withSymbol($referenceSymbol)
     {
         $instance = new self();
-        $instance::setSimple(json_decode($input));
-        $instance->referenceSymbol = $instance->referenceSymbol(self::backText);
-        echo "reference text:" . $instance->referenceSymbol->text . PHP_EOL;
-        echo "reference confidence:" . $instance->referenceSymbol->text . PHP_EOL;
-        
-        return $instance;
-    }
-
-    // 构造函数
-    public static function withSimple($annotation)
-    {
-        $instance = new self();
-        $instance->referenceSymbol = $instance->referenceSymbol(self::backText);
-        echo "reference text:" . $instance->referenceSymbol->text . PHP_EOL;
-        echo "reference confidence:" . $instance->referenceSymbol->confidence . PHP_EOL;
+        $instance->referenceSymbol = $referenceSymbol;
         return $instance;
     }
 
@@ -55,29 +63,23 @@ class SimpleBack extends Simple
     }
 
     // 取卡范围
-    public function cardAreaByMitome()
+    public function cardArea()
     {
-        $referenceArea = array();
+        $referenceTimes = null;
+        switch ($this->referenceSymbol->getText()) {
+            case "認":
+                $referenceTimes = array(
+                    18,
+                    16,
+                    47,
+                    11
+                );
+                break;
+            default:
+                echo "cardArea error";
+        }
         
-        $leftX = $this->referenceSymbol->boundingBox->vertices[0]->x - ($this->referenceSymbol->boundingBox->vertices[1]->x - $this->referenceSymbol->boundingBox->vertices[0]->x) * 18;
-        $leftY = $this->referenceSymbol->boundingBox->vertices[0]->y - ($this->referenceSymbol->boundingBox->vertices[1]->y - $this->referenceSymbol->boundingBox->vertices[0]->y) * 18;
-        $referenceArea[0] = Axis::withXY($leftX, $leftY);
-        
-        $upX = $this->referenceSymbol->boundingBox->vertices[0]->x - ($this->referenceSymbol->boundingBox->vertices[3]->x - $this->referenceSymbol->boundingBox->vertices[0]->x) * 16;
-        $upY = $this->referenceSymbol->boundingBox->vertices[0]->y - ($this->referenceSymbol->boundingBox->vertices[3]->y - $this->referenceSymbol->boundingBox->vertices[0]->y) * 16;
-        $referenceArea[1] = Axis::withXY($upX, $upY);
-        
-        $rightX = $this->referenceSymbol->boundingBox->vertices[0]->x + ($this->referenceSymbol->boundingBox->vertices[1]->x - $this->referenceSymbol->boundingBox->vertices[0]->x) * 47;
-        $rightY = $this->referenceSymbol->boundingBox->vertices[0]->y + ($this->referenceSymbol->boundingBox->vertices[1]->y - $this->referenceSymbol->boundingBox->vertices[0]->y) * 47;
-        $referenceArea[2] = Axis::withXY($rightX, $rightY);
-        
-        $downX = $this->referenceSymbol->boundingBox->vertices[0]->x + ($this->referenceSymbol->boundingBox->vertices[3]->x - $this->referenceSymbol->boundingBox->vertices[0]->x) * 11;
-        $downY = $this->referenceSymbol->boundingBox->vertices[0]->y + ($this->referenceSymbol->boundingBox->vertices[3]->y - $this->referenceSymbol->boundingBox->vertices[0]->y) * 11;
-        $referenceArea[3] = Axis::withXY($downX, $downY);
-        
-        $this->cardArea = $this->getArea($referenceArea);
-        
-        return $this->cardArea;
+        return Simple::getArea($this->referenceSymbol, $referenceTimes);
     }
 
     // 取MyNumber范围

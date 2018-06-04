@@ -140,12 +140,39 @@ class Simple
     }
 
     // 通过参照物取特定范围
-    public function getArea(Array $referenceArea, Axis $referencePoint)
+    public static function getArea($referenceSymbol, Array $referenceTimes)
     {
-        $triangleLeftUp = Triangle::withAxis($referenceArea[0], $referencePoint);
-        $triangleRightUp = Triangle::withAxis($referenceArea[1], $referencePoint);
-        $triangleRightDown = Triangle::withAxis($referenceArea[2], $referencePoint);
-        $triangleLeftDown = Triangle::withAxis($referenceArea[3], $referencePoint);
+        $vertices = $referenceSymbol->getBoundingBox()->getVertices();
+        
+        $referenceWidth = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[1]));
+        $referenceHeight = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[3]));
+        
+        $referenceArea = array();
+        
+        $leftX = $vertices[0]->getX() - $referenceWidth->getAdjacent() * $referenceTimes[0];
+        $leftY = $vertices[0]->getY() - $referenceWidth->getOpposite() * $referenceTimes[0];
+        $referenceArea[0] = Axis::withXY($leftX, $leftY);
+        echo "referenceArea[0]:" . $referenceArea[0]->getX() . "," . $referenceArea[0]->getY() . PHP_EOL;
+        
+        $upX = $vertices[0]->getX() - $referenceHeight->getAdjacent() * $referenceTimes[1];
+        $upY = $vertices[0]->getY() - $referenceHeight->getOpposite() * $referenceTimes[1];
+        $referenceArea[1] = Axis::withXY($upX, $upY);
+        echo "referenceArea[1]:" . $referenceArea[1]->getX() . "," . $referenceArea[1]->getY() . PHP_EOL;
+        
+        $rightX = $vertices[0]->getX() + $referenceWidth->getAdjacent() * $referenceTimes[2];
+        $rightY = $vertices[0]->getY() + $referenceWidth->getOpposite() * $referenceTimes[2];
+        $referenceArea[2] = Axis::withXY($rightX, $rightY);
+        echo "referenceArea[2]:" . $referenceArea[2]->getX() . "," . $referenceArea[2]->getY() . PHP_EOL;
+        
+        $downX = $vertices[0]->getX() + $referenceHeight->getAdjacent() * $referenceTimes[3];
+        $downY = $vertices[0]->getY() + $referenceHeight->getOpposite() * $referenceTimes[3];
+        $referenceArea[3] = Axis::withXY($downX, $downY);
+        echo "referenceArea[3]:" . $referenceArea[3]->getX() . "," . $referenceArea[3]->getY() . PHP_EOL;
+        
+        $triangleLeftUp = Triangle::withAxis($referenceArea[0], Axis::withVertex($vertices[0]));
+        $triangleRightUp = Triangle::withAxis($referenceArea[1], Axis::withVertex($vertices[0]));
+        $triangleRightDown = Triangle::withAxis($referenceArea[2], Axis::withVertex($vertices[0]));
+        $triangleLeftDown = Triangle::withAxis($referenceArea[3], Axis::withVertex($vertices[0]));
         
         $area = array();
         $area[0] = Triangle::withLine($triangleLeftUp->getAdjacent(), $triangleLeftUp->getOpposite(), null, $referenceArea[1])->getPointLeft();
@@ -161,50 +188,27 @@ class Simple
         return $area;
     }
 
-    public function referenceTriangle($referenceText)
+    public static function cutArea(Array $area)
     {
-        $blocks = $this->getSimpleBlocks();
-        $blocksLength = count($blocks);
+        $xs = array(
+            $area[0]->getX(),
+            $area[1]->getX(),
+            $area[2]->getX(),
+            $area[3]->getX()
+        );
+        $ys = array(
+            $area[0]->getY(),
+            $area[1]->getY(),
+            $area[2]->getY(),
+            $area[3]->getY()
+        );
         
-        if (0 !== $blocksLength) {
-            for ($i = 0; $i < $blocksLength; $i ++) {
-                $paragraphs = $blocks[$i]->paragraphs;
-                $paragraphsLength = count($paragraphs);
-                
-                if (0 !== $paragraphsLength) {
-                    for ($p = 0; $p < $paragraphsLength; $p ++) {
-                        $words = $paragraphs[$p]->words;
-                        $wordsLength = count($words);
-                        
-                        if (0 !== $wordsLength) {
-                            for ($w = 0; $w < $wordsLength; $w ++) {
-                                $symbols = $words[$w]->symbols;
-                                $symbolsLength = count($symbols);
-                                
-                                if (0 !== $symbols) {
-                                    for ($s = 0; $s < $symbolsLength; $s ++) {
-                                        if ($symbols[$s]->text === $referenceText) {
-                                            $triangle = Triangle::withAxis(Axis::withVertex($blocks[$i]->boundingBox->vertices[0]), Axis::withVertex($blocks[$i]->boundingBox->vertices[1]));
-                                            return $triangle;
-                                        }
-                                        
-                                        $symbolArray[] = $symbols[$s];
-                                    }
-                                } else {
-                                    echo "word[" . $w . "] have no symbol";
-                                }
-                            }
-                        } else {
-                            echo "paragraph[" . $p . "] have no word";
-                        }
-                    }
-                } else {
-                    echo "block[" . $i . "] have no paragraph";
-                }
-            }
-        } else {
-            echo "white paper";
-        }
+        return array(
+            "x" => min($xs),
+            "y" => min($ys),
+            "width" => max($xs) - min($xs),
+            "height" => max($ys) - min($ys)
+        );
     }
 
     public function getObjectByRange(Array $area, $referenceSymbol)
@@ -431,4 +435,6 @@ class Simple
     {
         $this->hasBack = $hasBack;
     }
+    
+    
 }
