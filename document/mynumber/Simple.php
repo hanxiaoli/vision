@@ -9,26 +9,26 @@ class Simple
         "所",
         "意",
         "思",
-        "腸",
-        "眼",
-        "肝",
-        "腎",
+        "性",
+        "別",
+        "有",
+        "効",
         "及",
-        "小"
+        "特"
     );
 
     // 背面参照物列表
     public const backText = array(
-        "拾",
-        "得",
-        "手",
-        "数",
-        "下",
-        "禁",
-        "認",
-        "項",
-        "時",
-        "付"
+        "拾", // 13 X 14
+        "得", // 13 X 14
+        "方", // 13 X 14
+        "手", // 13 X 14
+        "数", // 13 X 14
+        "間", // 13 X 14
+        "認", // 10 X 11
+        "禁", // 10 X 11
+        "載", // 10 X 11
+        "項" // 10 X 11
     );
 
     // simple
@@ -211,60 +211,60 @@ class Simple
         );
     }
 
-    public function getObjectByRange(Array $area, $referenceSymbol)
-    {
-        $obj = null;
-        
-        $symbols = $this->getSimpleSymbols();
-        $symbolsLength = count($symbols);
-        $startSymbol = null;
-        $starLength = null;
-        $endSymbol = null;
-        $endLength = null;
-        for ($i = 0; $i < $symbolsLength; $i ++) {
-            $startTriangle = Triangle::withAxis($area[0], Axis::withVertex($symbols[$i]->boundingBox->vertices[0]));
-            $endTriangle = Triangle::withAxis(Axis::withVertex($symbols[$i]->boundingBox->vertices[1]), $area[1]);
-            
-            $thisLengthFromStart = abs(Triangle::withAxis($area[0], Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
-            $thisLengthFromEnd = abs(Triangle::withAxis(Axis::withVertex($symbols[$i]->boundingBox->vertices[1]), $area[1])->getHypotenuse());
-            
-            if (null === $starLength or $starLength >= $thisLengthFromStart) {
-                
-                if ("■" == $symbols[$i]->text) {} else {
-                    $startSymbol = &$symbols[$i];
-                    $starLength = $thisLengthFromStart;
-                }
-            }
-            
-            if (null === $endLength or $endLength >= $thisLengthFromEnd) {
-                $endSymbol = &$symbols[$i];
-                $endLength = $thisLengthFromEnd;
-            }
-        }
-        
-        $obj .= $startSymbol->text;
-        
-        while ($startSymbol !== $endSymbol) {
-            $previousSymbol = $startSymbol;
-            $starLength = null;
-            for ($i = 0; $i < $symbolsLength; $i ++) {
-                if ($startSymbol == $symbols[$i]) {
-                    continue;
-                }
-                $thisLengthFromStart = abs(Triangle::withAxis(Axis::withVertex($startSymbol->boundingBox->vertices[1]), Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
-                
-                if (null === $starLength or $starLength >= $thisLengthFromStart) {
-                    $previousSymbol = &$symbols[$i];
-                    $starLength = $thisLengthFromStart;
-                }
-            }
-            $startSymbol = &$previousSymbol;
-            
-            $obj .= $startSymbol->text;
-        }
-        return $obj;
-    }
-
+    // public function getObjectByRange(Array $area, $referenceSymbol)
+    // {
+    // $obj = null;
+    
+    // $symbols = $this->getSimpleSymbols();
+    // $symbolsLength = count($symbols);
+    // $startSymbol = null;
+    // $starLength = null;
+    // $endSymbol = null;
+    // $endLength = null;
+    // for ($i = 0; $i < $symbolsLength; $i ++) {
+    // $startTriangle = Triangle::withAxis($area[0], Axis::withVertex($symbols[$i]->boundingBox->vertices[0]));
+    // $endTriangle = Triangle::withAxis(Axis::withVertex($symbols[$i]->boundingBox->vertices[1]), $area[1]);
+    
+    // $thisLengthFromStart = abs(Triangle::withAxis($area[0], Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
+    // $thisLengthFromEnd = abs(Triangle::withAxis(Axis::withVertex($symbols[$i]->boundingBox->vertices[1]), $area[1])->getHypotenuse());
+    
+    // if (null === $starLength or $starLength >= $thisLengthFromStart) {
+    
+    // if ("■" == $symbols[$i]->text) {} else {
+    // $startSymbol = &$symbols[$i];
+    // $starLength = $thisLengthFromStart;
+    // }
+    // }
+    
+    // if (null === $endLength or $endLength >= $thisLengthFromEnd) {
+    // $endSymbol = &$symbols[$i];
+    // $endLength = $thisLengthFromEnd;
+    // }
+    // }
+    
+    // $obj .= $startSymbol->text;
+    
+    // while ($startSymbol !== $endSymbol) {
+    // $previousSymbol = $startSymbol;
+    // $starLength = null;
+    // for ($i = 0; $i < $symbolsLength; $i ++) {
+    // if ($startSymbol == $symbols[$i]) {
+    // continue;
+    // }
+    // $thisLengthFromStart = abs(Triangle::withAxis(Axis::withVertex($startSymbol->boundingBox->vertices[1]), Axis::withVertex($symbols[$i]->boundingBox->vertices[0]))->getHypotenuse());
+    
+    // if (null === $starLength or $starLength >= $thisLengthFromStart) {
+    // $previousSymbol = &$symbols[$i];
+    // $starLength = $thisLengthFromStart;
+    // }
+    // }
+    // $startSymbol = &$previousSymbol;
+    
+    // $obj .= $startSymbol->text;
+    // }
+    // return $obj;
+    // }
+    
     /**
      *
      * @return mixed
@@ -435,6 +435,4 @@ class Simple
     {
         $this->hasBack = $hasBack;
     }
-    
-    
 }
