@@ -3,6 +3,12 @@
 class Simple
 {
 
+    // 卡的宽度mm
+    public const cardWidth = 85.5;
+
+    // 卡的高度mm
+    public const cardHeight = 54;
+
     // 正面参照物列表
     public const frontText = array(
         "住",
@@ -31,6 +37,172 @@ class Simple
         "項" // 10 X 11
     );
 
+    // 正面参照物标准
+    public const referenceWidthFront = array(
+        "住" => array(
+            "left" => 3,
+            "right" => 82.5,
+            "up" => 11,
+            "down" => 43,
+            "意" => 36,
+            "思" => 37.5,
+            "性" => 70,
+            "別" => 72,
+            "有" => 75,
+            "効" => 77.5,
+            "及" => 45,
+            "特" => 30
+        ),
+        "所" => array(
+            "意" => 34,
+            "思" => 35.5,
+            "性" => 68,
+            "別" => 70,
+            "有" => 73,
+            "効" => 75.5,
+            "及" => 43,
+            "特" => 28
+        ),
+        "意" => array(
+            "住" => 36,
+            "所" => 34,
+            "性" => 34,
+            "別" => 36,
+            "有" => 39,
+            "効" => 41.5
+        ),
+        "思" => array(
+            "住" => 37.5,
+            "所" => 35.5,
+            "性" => 32.5,
+            "別" => 34.5,
+            "有" => 37.5,
+            "効" => 40
+        ),
+        "性" => array(
+            "住" => 70,
+            "所" => 68,
+            "意" => 34,
+            "思" => 32.5,
+            "及" => 24,
+            "特" => 40
+        ),
+        "別" => array(
+            "住" => 72,
+            "所" => 70,
+            "意" => 36,
+            "思" => 34.5,
+            "及" => 26,
+            "特" => 42
+        ),
+        "有" => array(
+            "住" => 75,
+            "所" => 73,
+            "意" => 39,
+            "思" => 37.5,
+            "及" => 30,
+            "特" => 44.5
+        ),
+        "効" => array(
+            "住" => 77.5,
+            "所" => 75.5,
+            "意" => 41.5,
+            "思" => 40,
+            "及" => 32.5,
+            "特" => 47
+        ),
+        "及" => array(
+            "住" => 45,
+            "所" => 43,
+            "性" => 24,
+            "別" => 26,
+            "有" => 30,
+            "効" => 32.5
+        ),
+        "特" => array(
+            "住" => 30,
+            "所" => 28,
+            "性" => 40,
+            "別" => 42,
+            "有" => 44.5,
+            "効" => 47
+        )
+    );
+
+    // 背面参照物标准
+    public const referenceHeightBack = array(
+        "拾" => array(
+            "認" => 31.5,
+            "禁" => 39.8,
+            "載" => 42.5,
+            "事" => 42.5,
+            "項" => 42.5
+        ),
+        "得" => array(
+            "認" => 31.5,
+            "禁" => 39.8,
+            "載" => 42.5,
+            "事" => 42.5,
+            "項" => 42.5
+        ),
+        "方" => array(
+            "認" => 31.5,
+            "禁" => 39.8,
+            "載" => 42.5,
+            "事" => 42.5,
+            "項" => 42.5
+        ),
+        "手" => array(
+            "認" => 31.5,
+            "禁" => 39.8,
+            "載" => 42.5,
+            "事" => 42.5,
+            "項" => 42.5
+        ),
+        "数" => array(
+            "認" => 31.5,
+            "禁" => 39.8,
+            "載" => 42.5,
+            "事" => 42.5,
+            "項" => 42.5
+        ),
+        "認" => array(
+            "拾" => 31.5,
+            "得" => 39.8,
+            "方" => 42.5,
+            "手" => 42.5,
+            "数" => 42.5
+        ),
+        "禁" => array(
+            "拾" => 31.5,
+            "得" => 39.8,
+            "方" => 42.5,
+            "手" => 42.5,
+            "数" => 42.5
+        ),
+        "載" => array(
+            "拾" => 31.5,
+            "得" => 39.8,
+            "方" => 42.5,
+            "手" => 42.5,
+            "数" => 42.5
+        ),
+        "事" => array(
+            "拾" => 31.5,
+            "得" => 39.8,
+            "方" => 42.5,
+            "手" => 42.5,
+            "数" => 42.5
+        ),
+        "項" => array(
+            "拾" => 31.5,
+            "得" => 39.8,
+            "方" => 42.5,
+            "手" => 42.5,
+            "数" => 42.5
+        )
+    );
+
     // simple
     private $annotation = null;
 
@@ -48,6 +220,12 @@ class Simple
 
     // 是否包含背面
     private $hasBack = false;
+
+    // 正面参照symbol array
+    private $referenceSymbolArrayFront = array();
+
+    // 背面参照symbol array
+    private $referenceSymbolArrayBack = array();
 
     // 正面参照symbol
     private $referenceSymbolFront = null;
@@ -80,6 +258,7 @@ class Simple
                             ($instance->simpleSymbols)[] = $symbol;
                             // TODO
                             if (in_array($symbol->getText(), self::frontText)) {
+                                $referenceSymbolArrayFront[$symbol->getText()] = $symbol;
                                 if (null === $instance->referenceSymbolFront || $symbol->getConfidence() > $instance->referenceSymbolFront->getConfidence()) {
                                     $instance->referenceSymbolFront = $symbol;
                                     $instance->referenceBlockFront = $block;
@@ -88,6 +267,7 @@ class Simple
                             }
                             
                             if (in_array($symbol->getText(), self::backText)) {
+                                $referenceSymbolArrayBack[$symbol->getText()] = $symbol;
                                 if (null === $instance->referenceSymbolBack || $symbol->getConfidence() > $instance->referenceSymbolBack->getConfidence()) {
                                     $instance->referenceSymbolBack = $symbol;
                                     $instance->referenceBlockBack = $block;
