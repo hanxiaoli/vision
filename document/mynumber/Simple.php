@@ -54,6 +54,10 @@ class Simple
             "特" => 30
         ),
         "所" => array(
+            "left" => 5,
+            "right" => 80.5,
+            "up" => 11,
+            "down" => 43,
             "意" => 34,
             "思" => 35.5,
             "性" => 68,
@@ -64,6 +68,10 @@ class Simple
             "特" => 28
         ),
         "意" => array(
+            "left" => 39,
+            "right" => 46.5,
+            "up" => 45,
+            "down" => 9,
             "住" => 36,
             "所" => 34,
             "性" => 34,
@@ -72,6 +80,10 @@ class Simple
             "効" => 41.5
         ),
         "思" => array(
+            "left" => 40.5,
+            "right" => 45,
+            "up" => 45,
+            "down" => 9,
             "住" => 37.5,
             "所" => 35.5,
             "性" => 32.5,
@@ -80,6 +92,10 @@ class Simple
             "効" => 40
         ),
         "性" => array(
+            "left" => 72.5,
+            "right" => 13,
+            "up" => 14.5,
+            "down" => 39.5,
             "住" => 70,
             "所" => 68,
             "意" => 34,
@@ -88,6 +104,10 @@ class Simple
             "特" => 40
         ),
         "別" => array(
+            "left" => 74.5,
+            "right" => 11,
+            "up" => 14.5,
+            "down" => 39.5,
             "住" => 72,
             "所" => 70,
             "意" => 36,
@@ -96,6 +116,10 @@ class Simple
             "特" => 42
         ),
         "有" => array(
+            "left" => 77.5,
+            "right" => 8,
+            "up" => 18,
+            "down" => 36,
             "住" => 75,
             "所" => 73,
             "意" => 39,
@@ -104,6 +128,10 @@ class Simple
             "特" => 44.5
         ),
         "効" => array(
+            "left" => 80,
+            "right" => 5.5,
+            "up" => 18,
+            "down" => 36,
             "住" => 77.5,
             "所" => 75.5,
             "意" => 41.5,
@@ -112,6 +140,10 @@ class Simple
             "特" => 47
         ),
         "及" => array(
+            "left" => 48,
+            "right" => 37.5,
+            "up" => 45,
+            "down" => 9,
             "住" => 45,
             "所" => 43,
             "性" => 24,
@@ -120,6 +152,10 @@ class Simple
             "効" => 32.5
         ),
         "特" => array(
+            "left" => 32.5,
+            "right" => 53,
+            "up" => 50,
+            "down" => 4,
             "住" => 30,
             "所" => 28,
             "性" => 40,
@@ -130,6 +166,7 @@ class Simple
     );
 
     // 背面参照物标准
+    // TODO need to fix
     public const referenceHeightBack = array(
         "拾" => array(
             "認" => 31.5,
@@ -258,7 +295,7 @@ class Simple
                             ($instance->simpleSymbols)[] = $symbol;
                             // TODO
                             if (in_array($symbol->getText(), self::frontText)) {
-                                $referenceSymbolArrayFront[$symbol->getText()] = $symbol;
+                                ($instance->referenceSymbolArrayFront)[$symbol->getText()] = $symbol;
                                 if (null === $instance->referenceSymbolFront || $symbol->getConfidence() > $instance->referenceSymbolFront->getConfidence()) {
                                     $instance->referenceSymbolFront = $symbol;
                                     $instance->referenceBlockFront = $block;
@@ -267,7 +304,7 @@ class Simple
                             }
                             
                             if (in_array($symbol->getText(), self::backText)) {
-                                $referenceSymbolArrayBack[$symbol->getText()] = $symbol;
+                                ($instance->referenceSymbolArrayBack)[$symbol->getText()] = $symbol;
                                 if (null === $instance->referenceSymbolBack || $symbol->getConfidence() > $instance->referenceSymbolBack->getConfidence()) {
                                     $instance->referenceSymbolBack = $symbol;
                                     $instance->referenceBlockBack = $block;
@@ -284,9 +321,21 @@ class Simple
                 return null;
             }
             
+            if ($matchingTimesFront >= 3 and $matchingTimesBack >= 3) {
+                echo "两面的识别请联系。";
+                return null;
+            }
+            
             if ($matchingTimesFront >= 3) {
                 $instance->hasFront = true;
                 print('Reference symbol front: ' . $instance->referenceSymbolFront->getText() . '(' . $instance->referenceSymbolFront->getConfidence() . ')' . PHP_EOL);
+                
+                $vertices = $instance->referenceBlockFront->getBoundingBox()->getVertices();
+                $bounds = [];
+                foreach ($vertices as $vertex) {
+                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+                }
+                print('ReferenceBlockFront Bounds: ' . join(', ', $bounds) . PHP_EOL);
             } else {
                 $instance->referenceSymbolFront = null;
             }
@@ -294,23 +343,16 @@ class Simple
             if ($matchingTimesBack >= 3) {
                 $instance->hasBack = true;
                 print('Reference symbol back: ' . $instance->referenceSymbolBack->getText() . '(' . $instance->referenceSymbolBack->getConfidence() . ')' . PHP_EOL);
+                
+                $vertices = $instance->referenceBlockBack->getBoundingBox()->getVertices();
+                $bounds = [];
+                foreach ($vertices as $vertex) {
+                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+                }
+                print('ReferenceBlockBack Bounds: ' . join(', ', $bounds) . PHP_EOL);
             } else {
                 $instance->referenceSymbolBack = null;
             }
-            
-            $vertices = $instance->referenceBlockFront->getBoundingBox()->getVertices();
-            $bounds = [];
-            foreach ($vertices as $vertex) {
-                $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
-            }
-            print('ReferenceBlockFront Bounds: ' . join(', ', $bounds) . PHP_EOL);
-            
-            $vertices = $instance->referenceBlockBack->getBoundingBox()->getVertices();
-            $bounds = [];
-            foreach ($vertices as $vertex) {
-                $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
-            }
-            print('ReferenceBlockBack Bounds: ' . join(', ', $bounds) . PHP_EOL);
             
             return $instance;
         } else {
@@ -320,54 +362,53 @@ class Simple
     }
 
     // 通过参照物取特定范围
-    public static function getArea($referenceSymbol, Array $referenceTimes)
-    {
-        $vertices = $referenceSymbol->getBoundingBox()->getVertices();
-        
-        $referenceWidth = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[1]));
-        $referenceHeight = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[3]));
-        
-        $referenceArea = array();
-        
-        $leftX = $vertices[0]->getX() - $referenceWidth->getAdjacent() * $referenceTimes[0];
-        $leftY = $vertices[0]->getY() - $referenceWidth->getOpposite() * $referenceTimes[0];
-        $referenceArea[0] = Axis::withXY($leftX, $leftY);
-        echo "referenceArea[0]:" . $referenceArea[0]->getX() . "," . $referenceArea[0]->getY() . PHP_EOL;
-        
-        $upX = $vertices[0]->getX() - $referenceHeight->getAdjacent() * $referenceTimes[1];
-        $upY = $vertices[0]->getY() - $referenceHeight->getOpposite() * $referenceTimes[1];
-        $referenceArea[1] = Axis::withXY($upX, $upY);
-        echo "referenceArea[1]:" . $referenceArea[1]->getX() . "," . $referenceArea[1]->getY() . PHP_EOL;
-        
-        $rightX = $vertices[0]->getX() + $referenceWidth->getAdjacent() * $referenceTimes[2];
-        $rightY = $vertices[0]->getY() + $referenceWidth->getOpposite() * $referenceTimes[2];
-        $referenceArea[2] = Axis::withXY($rightX, $rightY);
-        echo "referenceArea[2]:" . $referenceArea[2]->getX() . "," . $referenceArea[2]->getY() . PHP_EOL;
-        
-        $downX = $vertices[0]->getX() + $referenceHeight->getAdjacent() * $referenceTimes[3];
-        $downY = $vertices[0]->getY() + $referenceHeight->getOpposite() * $referenceTimes[3];
-        $referenceArea[3] = Axis::withXY($downX, $downY);
-        echo "referenceArea[3]:" . $referenceArea[3]->getX() . "," . $referenceArea[3]->getY() . PHP_EOL;
-        
-        $triangleLeftUp = Triangle::withAxis($referenceArea[0], Axis::withVertex($vertices[0]));
-        $triangleRightUp = Triangle::withAxis($referenceArea[1], Axis::withVertex($vertices[0]));
-        $triangleRightDown = Triangle::withAxis($referenceArea[2], Axis::withVertex($vertices[0]));
-        $triangleLeftDown = Triangle::withAxis($referenceArea[3], Axis::withVertex($vertices[0]));
-        
-        $area = array();
-        $area[0] = Triangle::withLine($triangleLeftUp->getAdjacent(), $triangleLeftUp->getOpposite(), null, $referenceArea[1])->getPointLeft();
-        $area[1] = Triangle::withLine($triangleRightUp->getAdjacent(), $triangleRightUp->getOpposite(), null, $referenceArea[2])->getPointLeft();
-        $area[2] = Triangle::withLine($triangleRightDown->getAdjacent(), $triangleRightDown->getOpposite(), null, $referenceArea[3])->getPointLeft();
-        $area[3] = Triangle::withLine($triangleLeftDown->getAdjacent(), $triangleLeftDown->getOpposite(), null, $referenceArea[0])->getPointLeft();
-        
-        echo "area [0]:" . "x=" . $area[0]->getX() . ", y=" . $area[0]->getY() . PHP_EOL;
-        echo "area [1]:" . "x=" . $area[1]->getX() . ", y=" . $area[1]->getY() . PHP_EOL;
-        echo "area [2]:" . "x=" . $area[2]->getX() . ", y=" . $area[2]->getY() . PHP_EOL;
-        echo "area [3]:" . "x=" . $area[3]->getX() . ", y=" . $area[3]->getY() . PHP_EOL;
-        
-        return $area;
-    }
-
+    // public static function getArea($referenceSymbol, Array $referenceTimes)
+    // {
+    // $vertices = $referenceSymbol->getBoundingBox()->getVertices();
+    
+    // $referenceWidth = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[1]));
+    // $referenceHeight = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[3]));
+    
+    // $referenceArea = array();
+    
+    // $leftX = $vertices[0]->getX() - $referenceWidth->getAdjacent() * $referenceTimes[0];
+    // $leftY = $vertices[0]->getY() - $referenceWidth->getOpposite() * $referenceTimes[0];
+    // $referenceArea[0] = Axis::withXY($leftX, $leftY);
+    // echo "referenceArea[0]:" . $referenceArea[0]->getX() . "," . $referenceArea[0]->getY() . PHP_EOL;
+    
+    // $upX = $vertices[0]->getX() - $referenceHeight->getAdjacent() * $referenceTimes[1];
+    // $upY = $vertices[0]->getY() - $referenceHeight->getOpposite() * $referenceTimes[1];
+    // $referenceArea[1] = Axis::withXY($upX, $upY);
+    // echo "referenceArea[1]:" . $referenceArea[1]->getX() . "," . $referenceArea[1]->getY() . PHP_EOL;
+    
+    // $rightX = $vertices[0]->getX() + $referenceWidth->getAdjacent() * $referenceTimes[2];
+    // $rightY = $vertices[0]->getY() + $referenceWidth->getOpposite() * $referenceTimes[2];
+    // $referenceArea[2] = Axis::withXY($rightX, $rightY);
+    // echo "referenceArea[2]:" . $referenceArea[2]->getX() . "," . $referenceArea[2]->getY() . PHP_EOL;
+    
+    // $downX = $vertices[0]->getX() + $referenceHeight->getAdjacent() * $referenceTimes[3];
+    // $downY = $vertices[0]->getY() + $referenceHeight->getOpposite() * $referenceTimes[3];
+    // $referenceArea[3] = Axis::withXY($downX, $downY);
+    // echo "referenceArea[3]:" . $referenceArea[3]->getX() . "," . $referenceArea[3]->getY() . PHP_EOL;
+    
+    // $triangleLeftUp = Triangle::withAxis($referenceArea[0], Axis::withVertex($vertices[0]));
+    // $triangleRightUp = Triangle::withAxis($referenceArea[1], Axis::withVertex($vertices[0]));
+    // $triangleRightDown = Triangle::withAxis($referenceArea[2], Axis::withVertex($vertices[0]));
+    // $triangleLeftDown = Triangle::withAxis($referenceArea[3], Axis::withVertex($vertices[0]));
+    
+    // $area = array();
+    // $area[0] = Triangle::withLine($triangleLeftUp->getAdjacent(), $triangleLeftUp->getOpposite(), null, $referenceArea[1])->getPointLeft();
+    // $area[1] = Triangle::withLine($triangleRightUp->getAdjacent(), $triangleRightUp->getOpposite(), null, $referenceArea[2])->getPointLeft();
+    // $area[2] = Triangle::withLine($triangleRightDown->getAdjacent(), $triangleRightDown->getOpposite(), null, $referenceArea[3])->getPointLeft();
+    // $area[3] = Triangle::withLine($triangleLeftDown->getAdjacent(), $triangleLeftDown->getOpposite(), null, $referenceArea[0])->getPointLeft();
+    
+    // echo "area [0]:" . "x=" . $area[0]->getX() . ", y=" . $area[0]->getY() . PHP_EOL;
+    // echo "area [1]:" . "x=" . $area[1]->getX() . ", y=" . $area[1]->getY() . PHP_EOL;
+    // echo "area [2]:" . "x=" . $area[2]->getX() . ", y=" . $area[2]->getY() . PHP_EOL;
+    // echo "area [3]:" . "x=" . $area[3]->getX() . ", y=" . $area[3]->getY() . PHP_EOL;
+    
+    // return $area;
+    // }
     public static function cutArea(Array $area)
     {
         $xs = array(
@@ -614,5 +655,41 @@ class Simple
     public function setHasBack($hasBack)
     {
         $this->hasBack = $hasBack;
+    }
+
+    /**
+     *
+     * @return multitype:
+     */
+    public function getReferenceSymbolArrayFront()
+    {
+        return $this->referenceSymbolArrayFront;
+    }
+
+    /**
+     *
+     * @return multitype:
+     */
+    public function getReferenceSymbolArrayBack()
+    {
+        return $this->referenceSymbolArrayBack;
+    }
+
+    /**
+     *
+     * @param multitype: $referenceSymbolArrayFront
+     */
+    public function setReferenceSymbolArrayFront($referenceSymbolArrayFront)
+    {
+        $this->referenceSymbolArrayFront = $referenceSymbolArrayFront;
+    }
+
+    /**
+     *
+     * @param multitype: $referenceSymbolArrayBack
+     */
+    public function setReferenceSymbolArrayBack($referenceSymbolArrayBack)
+    {
+        $this->referenceSymbolArrayBack = $referenceSymbolArrayBack;
     }
 }

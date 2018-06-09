@@ -417,22 +417,21 @@ class Triangle
         }
     }
 
-    public function getDegree($sin=null)
+    public function getDegree($sin = null)
     {
-        
         if (null === $sin) {
             $sin = $this->getSin();
         }
         
-        $startIndex=null;
-        $endIndex=null;
-        if (0 < $this->adjacent and 0 <= $this->opposite ) {
+        $startIndex = null;
+        $endIndex = null;
+        if (0 < $this->adjacent and 0 <= $this->opposite) {
             $startIndex = 0;
-            $endIndex=90;
-        } else if (0 >= $this->adjacent and 0< $this->opposite ){
+            $endIndex = 90;
+        } else if (0 >= $this->adjacent and 0 < $this->opposite) {
             $startIndex = 90;
             $endIndex = 180;
-        } else if (0 > $this->adjacent and 0 >= $this->opposite ){
+        } else if (0 > $this->adjacent and 0 >= $this->opposite) {
             $startIndex = 180;
             $endIndex = 270;
         } else {
@@ -440,48 +439,9 @@ class Triangle
             $endIndex = 360;
         }
         
-        $index=null;
+        $index = null;
         $closest = null;
-        for ($i=$startIndex;$i<$endIndex;$i++) {
-            if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
-                $index = $i;
-                $closest = self::sinArray[$i];
-            }
-        }
-        return $index;
-    }
-    
-    public static function getDegree180($sin)
-    {
-        $index=null;
-        $closest = null;
-        for ($i=90;$i<180;$i++) {
-            if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
-                $index = $i;
-                $closest = self::sinArray[$i];
-            }
-        }
-        return $index;
-    }
-    
-    public static function getDegree270($sin)
-    {
-        $index=null;
-        $closest = null;
-        for ($i=180;$i<270;$i++) {
-            if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
-                $index = $i;
-                $closest = self::sinArray[$i];
-            }
-        }
-        return $index;
-    }
-    
-    public static function getDegree360($sin)
-    {
-        $index=null;
-        $closest = null;
-        for ($i=270;$i<360;$i++) {
+        for ($i = $startIndex; $i < $endIndex; $i ++) {
             if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
                 $index = $i;
                 $closest = self::sinArray[$i];
@@ -490,6 +450,45 @@ class Triangle
         return $index;
     }
 
+    // public static function getDegree180($sin)
+    // {
+    // $index=null;
+    // $closest = null;
+    // for ($i=90;$i<180;$i++) {
+    // if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
+    // $index = $i;
+    // $closest = self::sinArray[$i];
+    // }
+    // }
+    // return $index;
+    // }
+    
+    // public static function getDegree270($sin)
+    // {
+    // $index=null;
+    // $closest = null;
+    // for ($i=180;$i<270;$i++) {
+    // if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
+    // $index = $i;
+    // $closest = self::sinArray[$i];
+    // }
+    // }
+    // return $index;
+    // }
+    
+    // public static function getDegree360($sin)
+    // {
+    // $index=null;
+    // $closest = null;
+    // for ($i=270;$i<360;$i++) {
+    // if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
+    // $index = $i;
+    // $closest = self::sinArray[$i];
+    // }
+    // }
+    // return $index;
+    // }
+    
     // 取正弦
     public function getSin()
     {
