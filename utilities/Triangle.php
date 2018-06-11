@@ -391,6 +391,7 @@ class Triangle
         $instance->setAdjacent($pointRight->getX() - $pointLeft->getX());
         $instance->setOpposite($pointRight->getY() - $pointLeft->getY());
         $instance->setHypotenuse(sqrt($instance->adjacent * $instance->adjacent + $instance->opposite * $instance->opposite));
+        
         return $instance;
     }
 
@@ -441,53 +442,17 @@ class Triangle
         
         $index = null;
         $closest = null;
-        for ($i = $startIndex; $i < $endIndex; $i ++) {
+        for ($i = $startIndex; $i <= $endIndex; $i ++) {
             if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
                 $index = $i;
                 $closest = self::sinArray[$i];
             }
         }
+        
+        print('block degree: ' . $index . PHP_EOL);
+        
         return $index;
     }
-
-    // public static function getDegree180($sin)
-    // {
-    // $index=null;
-    // $closest = null;
-    // for ($i=90;$i<180;$i++) {
-    // if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
-    // $index = $i;
-    // $closest = self::sinArray[$i];
-    // }
-    // }
-    // return $index;
-    // }
-    
-    // public static function getDegree270($sin)
-    // {
-    // $index=null;
-    // $closest = null;
-    // for ($i=180;$i<270;$i++) {
-    // if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
-    // $index = $i;
-    // $closest = self::sinArray[$i];
-    // }
-    // }
-    // return $index;
-    // }
-    
-    // public static function getDegree360($sin)
-    // {
-    // $index=null;
-    // $closest = null;
-    // for ($i=270;$i<360;$i++) {
-    // if ($closest === null || abs($sin - $closest) > abs(self::sinArray[$i] - $sin)) {
-    // $index = $i;
-    // $closest = self::sinArray[$i];
-    // }
-    // }
-    // return $index;
-    // }
     
     // 取正弦
     public function getSin()

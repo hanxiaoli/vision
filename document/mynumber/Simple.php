@@ -1,4 +1,5 @@
 <?php
+use Google\Cloud\Vision\V1\TextAnnotation;
 
 class Simple
 {
@@ -8,20 +9,6 @@ class Simple
 
     // 卡的高度mm
     public const cardHeight = 54;
-
-    // 正面参照物列表
-    public const frontText = array(
-        "住",
-        "所",
-        "意",
-        "思",
-        "性",
-        "別",
-        "有",
-        "効",
-        "及",
-        "特"
-    );
 
     // 背面参照物列表
     public const backText = array(
@@ -35,209 +22,6 @@ class Simple
         "禁", // 10 X 11
         "載", // 10 X 11
         "項" // 10 X 11
-    );
-
-    // 正面参照物标准
-    public const referenceWidthFront = array(
-        "住" => array(
-            "left" => 3,
-            "right" => 82.5,
-            "up" => 11,
-            "down" => 43,
-            "意" => 36,
-            "思" => 37.5,
-            "性" => 70,
-            "別" => 72,
-            "有" => 75,
-            "効" => 77.5,
-            "及" => 45,
-            "特" => 30
-        ),
-        "所" => array(
-            "left" => 5,
-            "right" => 80.5,
-            "up" => 11,
-            "down" => 43,
-            "意" => 34,
-            "思" => 35.5,
-            "性" => 68,
-            "別" => 70,
-            "有" => 73,
-            "効" => 75.5,
-            "及" => 43,
-            "特" => 28
-        ),
-        "意" => array(
-            "left" => 39,
-            "right" => 46.5,
-            "up" => 45,
-            "down" => 9,
-            "住" => 36,
-            "所" => 34,
-            "性" => 34,
-            "別" => 36,
-            "有" => 39,
-            "効" => 41.5
-        ),
-        "思" => array(
-            "left" => 40.5,
-            "right" => 45,
-            "up" => 45,
-            "down" => 9,
-            "住" => 37.5,
-            "所" => 35.5,
-            "性" => 32.5,
-            "別" => 34.5,
-            "有" => 37.5,
-            "効" => 40
-        ),
-        "性" => array(
-            "left" => 72.5,
-            "right" => 13,
-            "up" => 14.5,
-            "down" => 39.5,
-            "住" => 70,
-            "所" => 68,
-            "意" => 34,
-            "思" => 32.5,
-            "及" => 24,
-            "特" => 40
-        ),
-        "別" => array(
-            "left" => 74.5,
-            "right" => 11,
-            "up" => 14.5,
-            "down" => 39.5,
-            "住" => 72,
-            "所" => 70,
-            "意" => 36,
-            "思" => 34.5,
-            "及" => 26,
-            "特" => 42
-        ),
-        "有" => array(
-            "left" => 77.5,
-            "right" => 8,
-            "up" => 18,
-            "down" => 36,
-            "住" => 75,
-            "所" => 73,
-            "意" => 39,
-            "思" => 37.5,
-            "及" => 30,
-            "特" => 44.5
-        ),
-        "効" => array(
-            "left" => 80,
-            "right" => 5.5,
-            "up" => 18,
-            "down" => 36,
-            "住" => 77.5,
-            "所" => 75.5,
-            "意" => 41.5,
-            "思" => 40,
-            "及" => 32.5,
-            "特" => 47
-        ),
-        "及" => array(
-            "left" => 48,
-            "right" => 37.5,
-            "up" => 45,
-            "down" => 9,
-            "住" => 45,
-            "所" => 43,
-            "性" => 24,
-            "別" => 26,
-            "有" => 30,
-            "効" => 32.5
-        ),
-        "特" => array(
-            "left" => 32.5,
-            "right" => 53,
-            "up" => 50,
-            "down" => 4,
-            "住" => 30,
-            "所" => 28,
-            "性" => 40,
-            "別" => 42,
-            "有" => 44.5,
-            "効" => 47
-        )
-    );
-
-    // 背面参照物标准
-    // TODO need to fix
-    public const referenceHeightBack = array(
-        "拾" => array(
-            "認" => 31.5,
-            "禁" => 39.8,
-            "載" => 42.5,
-            "事" => 42.5,
-            "項" => 42.5
-        ),
-        "得" => array(
-            "認" => 31.5,
-            "禁" => 39.8,
-            "載" => 42.5,
-            "事" => 42.5,
-            "項" => 42.5
-        ),
-        "方" => array(
-            "認" => 31.5,
-            "禁" => 39.8,
-            "載" => 42.5,
-            "事" => 42.5,
-            "項" => 42.5
-        ),
-        "手" => array(
-            "認" => 31.5,
-            "禁" => 39.8,
-            "載" => 42.5,
-            "事" => 42.5,
-            "項" => 42.5
-        ),
-        "数" => array(
-            "認" => 31.5,
-            "禁" => 39.8,
-            "載" => 42.5,
-            "事" => 42.5,
-            "項" => 42.5
-        ),
-        "認" => array(
-            "拾" => 31.5,
-            "得" => 39.8,
-            "方" => 42.5,
-            "手" => 42.5,
-            "数" => 42.5
-        ),
-        "禁" => array(
-            "拾" => 31.5,
-            "得" => 39.8,
-            "方" => 42.5,
-            "手" => 42.5,
-            "数" => 42.5
-        ),
-        "載" => array(
-            "拾" => 31.5,
-            "得" => 39.8,
-            "方" => 42.5,
-            "手" => 42.5,
-            "数" => 42.5
-        ),
-        "事" => array(
-            "拾" => 31.5,
-            "得" => 39.8,
-            "方" => 42.5,
-            "手" => 42.5,
-            "数" => 42.5
-        ),
-        "項" => array(
-            "拾" => 31.5,
-            "得" => 39.8,
-            "方" => 42.5,
-            "手" => 42.5,
-            "数" => 42.5
-        )
     );
 
     // simple
@@ -259,10 +43,10 @@ class Simple
     private $hasBack = false;
 
     // 正面参照symbol array
-    private $referenceSymbolArrayFront = array();
+    private $comparativeSymbolsFront = array();
 
     // 背面参照symbol array
-    private $referenceSymbolArrayBack = array();
+    private $comparativeSymbolsBack = array();
 
     // 正面参照symbol
     private $referenceSymbolFront = null;
@@ -276,8 +60,24 @@ class Simple
     // 背面参照block
     private $referenceBlockBack = null;
 
-    // 构造函数
-    public static function withAnnotation($annotation)
+    // 正面以x坐标计算得出的pix/mm
+    private $widthPixMmFront = null;
+
+    // 正面以y坐标计算得出的pix/mm
+    private $heightPixMmFront = null;
+
+    // 背面以x坐标计算得出的pix/mm
+    private $widthPixMmBack = null;
+
+    // 背面以y坐标计算得出的pix/mm
+    private $heightPixMmBack = null;
+
+    /**
+     * 构造函数
+     *
+     * @param Simple $simple
+     */
+    public static function withAnnotation(TextAnnotation $annotation)
     {
         $instance = new self();
         $instance->annotation = $annotation;
@@ -294,8 +94,8 @@ class Simple
                         foreach ($word->getSymbols() as $symbol) {
                             ($instance->simpleSymbols)[] = $symbol;
                             // TODO
-                            if (in_array($symbol->getText(), self::frontText)) {
-                                ($instance->referenceSymbolArrayFront)[$symbol->getText()] = $symbol;
+                            if (in_array($symbol->getText(), SimpleFront::referenceTextFront)) {
+                                ($instance->comparativeSymbolsFront)[$symbol->getText()] = $symbol;
                                 if (null === $instance->referenceSymbolFront || $symbol->getConfidence() > $instance->referenceSymbolFront->getConfidence()) {
                                     $instance->referenceSymbolFront = $symbol;
                                     $instance->referenceBlockFront = $block;
@@ -304,7 +104,7 @@ class Simple
                             }
                             
                             if (in_array($symbol->getText(), self::backText)) {
-                                ($instance->referenceSymbolArrayBack)[$symbol->getText()] = $symbol;
+                                ($instance->$comparativeSymbolsBack)[$symbol->getText()] = $symbol;
                                 if (null === $instance->referenceSymbolBack || $symbol->getConfidence() > $instance->referenceSymbolBack->getConfidence()) {
                                     $instance->referenceSymbolBack = $symbol;
                                     $instance->referenceBlockBack = $block;
@@ -318,16 +118,18 @@ class Simple
             }
             
             if ($matchingTimesFront < 3 and $matchingTimesBack < 3) {
+                echo "无法找到足够的参照物";
                 return null;
             }
             
             if ($matchingTimesFront >= 3 and $matchingTimesBack >= 3) {
-                echo "两面的识别请联系。";
+                echo "两面的识别请联系公司代表";
                 return null;
             }
             
             if ($matchingTimesFront >= 3) {
                 $instance->hasFront = true;
+                
                 print('Reference symbol front: ' . $instance->referenceSymbolFront->getText() . '(' . $instance->referenceSymbolFront->getConfidence() . ')' . PHP_EOL);
                 
                 $vertices = $instance->referenceBlockFront->getBoundingBox()->getVertices();
@@ -335,8 +137,11 @@ class Simple
                 foreach ($vertices as $vertex) {
                     $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
                 }
-                print('ReferenceBlockFront Bounds: ' . join(', ', $bounds) . PHP_EOL);
+                print('Reference blockFront vertices: ' . join(', ', $bounds) . PHP_EOL);
+                
+                $instance->setWidthPixMmFront();
             } else {
+                $instance->hasFront = false;
                 $instance->referenceSymbolFront = null;
             }
             
@@ -351,6 +156,7 @@ class Simple
                 }
                 print('ReferenceBlockBack Bounds: ' . join(', ', $bounds) . PHP_EOL);
             } else {
+                $instance->hasBack = false;
                 $instance->referenceSymbolBack = null;
             }
             
@@ -361,54 +167,11 @@ class Simple
         }
     }
 
-    // 通过参照物取特定范围
-    // public static function getArea($referenceSymbol, Array $referenceTimes)
-    // {
-    // $vertices = $referenceSymbol->getBoundingBox()->getVertices();
-    
-    // $referenceWidth = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[1]));
-    // $referenceHeight = Triangle::withAxis(Axis::withVertex($vertices[0]), Axis::withVertex($vertices[3]));
-    
-    // $referenceArea = array();
-    
-    // $leftX = $vertices[0]->getX() - $referenceWidth->getAdjacent() * $referenceTimes[0];
-    // $leftY = $vertices[0]->getY() - $referenceWidth->getOpposite() * $referenceTimes[0];
-    // $referenceArea[0] = Axis::withXY($leftX, $leftY);
-    // echo "referenceArea[0]:" . $referenceArea[0]->getX() . "," . $referenceArea[0]->getY() . PHP_EOL;
-    
-    // $upX = $vertices[0]->getX() - $referenceHeight->getAdjacent() * $referenceTimes[1];
-    // $upY = $vertices[0]->getY() - $referenceHeight->getOpposite() * $referenceTimes[1];
-    // $referenceArea[1] = Axis::withXY($upX, $upY);
-    // echo "referenceArea[1]:" . $referenceArea[1]->getX() . "," . $referenceArea[1]->getY() . PHP_EOL;
-    
-    // $rightX = $vertices[0]->getX() + $referenceWidth->getAdjacent() * $referenceTimes[2];
-    // $rightY = $vertices[0]->getY() + $referenceWidth->getOpposite() * $referenceTimes[2];
-    // $referenceArea[2] = Axis::withXY($rightX, $rightY);
-    // echo "referenceArea[2]:" . $referenceArea[2]->getX() . "," . $referenceArea[2]->getY() . PHP_EOL;
-    
-    // $downX = $vertices[0]->getX() + $referenceHeight->getAdjacent() * $referenceTimes[3];
-    // $downY = $vertices[0]->getY() + $referenceHeight->getOpposite() * $referenceTimes[3];
-    // $referenceArea[3] = Axis::withXY($downX, $downY);
-    // echo "referenceArea[3]:" . $referenceArea[3]->getX() . "," . $referenceArea[3]->getY() . PHP_EOL;
-    
-    // $triangleLeftUp = Triangle::withAxis($referenceArea[0], Axis::withVertex($vertices[0]));
-    // $triangleRightUp = Triangle::withAxis($referenceArea[1], Axis::withVertex($vertices[0]));
-    // $triangleRightDown = Triangle::withAxis($referenceArea[2], Axis::withVertex($vertices[0]));
-    // $triangleLeftDown = Triangle::withAxis($referenceArea[3], Axis::withVertex($vertices[0]));
-    
-    // $area = array();
-    // $area[0] = Triangle::withLine($triangleLeftUp->getAdjacent(), $triangleLeftUp->getOpposite(), null, $referenceArea[1])->getPointLeft();
-    // $area[1] = Triangle::withLine($triangleRightUp->getAdjacent(), $triangleRightUp->getOpposite(), null, $referenceArea[2])->getPointLeft();
-    // $area[2] = Triangle::withLine($triangleRightDown->getAdjacent(), $triangleRightDown->getOpposite(), null, $referenceArea[3])->getPointLeft();
-    // $area[3] = Triangle::withLine($triangleLeftDown->getAdjacent(), $triangleLeftDown->getOpposite(), null, $referenceArea[0])->getPointLeft();
-    
-    // echo "area [0]:" . "x=" . $area[0]->getX() . ", y=" . $area[0]->getY() . PHP_EOL;
-    // echo "area [1]:" . "x=" . $area[1]->getX() . ", y=" . $area[1]->getY() . PHP_EOL;
-    // echo "area [2]:" . "x=" . $area[2]->getX() . ", y=" . $area[2]->getY() . PHP_EOL;
-    // echo "area [3]:" . "x=" . $area[3]->getX() . ", y=" . $area[3]->getY() . PHP_EOL;
-    
-    // return $area;
-    // }
+    /**
+     * 取得卡区域的剪切坐标
+     *
+     * @param Array $area
+     */
     public static function cutArea(Array $area)
     {
         $xs = array(
@@ -517,6 +280,51 @@ class Simple
      *
      * @return mixed
      */
+    public function getSimpleSymbols()
+    {
+        return $this->simpleSymbols;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isHasFront()
+    {
+        return $this->hasFront;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isHasBack()
+    {
+        return $this->hasBack;
+    }
+
+    /**
+     *
+     * @return multitype:
+     */
+    public function getComparativeSymbolsFront()
+    {
+        return $this->comparativeSymbolsFront;
+    }
+
+    /**
+     *
+     * @return multitype:
+     */
+    public function getComparativeSymbolsBack()
+    {
+        return $this->comparativeSymbolsBack;
+    }
+
+    /**
+     *
+     * @return mixed
+     */
     public function getReferenceSymbolFront()
     {
         return $this->referenceSymbolFront;
@@ -578,11 +386,47 @@ class Simple
 
     /**
      *
-     * @param multitype:unknown $simpleSymbols
+     * @param mixed $simpleSymbols
      */
     public function setSimpleSymbols($simpleSymbols)
     {
         $this->simpleSymbols = $simpleSymbols;
+    }
+
+    /**
+     *
+     * @param boolean $hasFront
+     */
+    public function setHasFront($hasFront)
+    {
+        $this->hasFront = $hasFront;
+    }
+
+    /**
+     *
+     * @param boolean $hasBack
+     */
+    public function setHasBack($hasBack)
+    {
+        $this->hasBack = $hasBack;
+    }
+
+    /**
+     *
+     * @param multitype: $comparativeSymbolsFront
+     */
+    public function setComparativeSymbolsFront($comparativeSymbolsFront)
+    {
+        $this->comparativeSymbolsFront = $comparativeSymbolsFront;
+    }
+
+    /**
+     *
+     * @param multitype: $comparativeSymbolsBack
+     */
+    public function setComparativeSymbolsBack($comparativeSymbolsBack)
+    {
+        $this->comparativeSymbolsBack = $comparativeSymbolsBack;
     }
 
     /**
@@ -623,73 +467,92 @@ class Simple
 
     /**
      *
-     * @return boolean
+     * @return mixed
      */
-    public function isHasFront()
+    public function getWidthPixMmFront()
     {
-        return $this->hasFront;
+        return $this->widthPixMmFront;
     }
 
     /**
      *
-     * @return boolean
+     * @return mixed
      */
-    public function isHasBack()
+    public function getHeightPixMmFront()
     {
-        return $this->hasBack;
+        return $this->heightPixMmFront;
     }
 
     /**
      *
-     * @param boolean $hasFront
+     * @return mixed
      */
-    public function setHasFront($hasFront)
+    public function getWidthPixMmBack()
     {
-        $this->hasFront = $hasFront;
+        return $this->widthPixMmBack;
     }
 
     /**
      *
-     * @param boolean $hasBack
+     * @return mixed
      */
-    public function setHasBack($hasBack)
+    public function getHeightPixMmBack()
     {
-        $this->hasBack = $hasBack;
+        return $this->heightPixMmBack;
     }
 
     /**
      *
-     * @return multitype:
+     * @param mixed $widthPixMmFront
      */
-    public function getReferenceSymbolArrayFront()
+    public function setWidthPixMmFront($widthPixMmFront = null)
     {
-        return $this->referenceSymbolArrayFront;
+        if (null !== $widthPixMmFront) {
+            $this->widthPixMmFront = $widthPixMmFront;
+            return;
+        }
+        
+        $comparativeSymbols = (SimpleFront::comparativeSymbolsDistance[$this->referenceSymbolFront->getText()])["width"];
+        
+        foreach ($comparativeSymbols as $key => $comparativeSymbol) {
+            if (array_key_exists($key, $this->comparativeSymbolsFront)) {
+                $widthPixMmFront = Triangle::withAxis(Axis::withVertex(($this->referenceSymbolFront->getBoundingBox()->getVertices())[0]), Axis::withVertex(($this->comparativeSymbolsFront[$key]->getBoundingBox()->getVertices())[0]))->getHypotenuse() / $comparativeSymbol;
+                break;
+            }
+        }
+        
+        if (null === $widthPixMmFront) {
+            echo "setWidthPixMmFront error 1";
+        }
+        
+        $this->widthPixMmFront = $widthPixMmFront;
     }
 
     /**
      *
-     * @return multitype:
+     * @param mixed $heightPixMmFront
      */
-    public function getReferenceSymbolArrayBack()
+    public function setHeightPixMmFront($heightPixMmFront)
     {
-        return $this->referenceSymbolArrayBack;
+        $this->heightPixMmFront = $heightPixMmFront;
     }
 
     /**
      *
-     * @param multitype: $referenceSymbolArrayFront
+     * @param mixed $widthPixMmBack
      */
-    public function setReferenceSymbolArrayFront($referenceSymbolArrayFront)
+    public function setWidthPixMmBack($widthPixMmBack)
     {
-        $this->referenceSymbolArrayFront = $referenceSymbolArrayFront;
+        $this->widthPixMmBack = $widthPixMmBack;
     }
 
     /**
-     *
-     * @param multitype: $referenceSymbolArrayBack
+     * @param mixed $heightPixMmBack
      */
-    public function setReferenceSymbolArrayBack($referenceSymbolArrayBack)
+    public function setHeightPixMmBack($heightPixMmBack)
     {
-        $this->referenceSymbolArrayBack = $referenceSymbolArrayBack;
+        $this->heightPixMmBack = $heightPixMmBack;
     }
+
+
 }
