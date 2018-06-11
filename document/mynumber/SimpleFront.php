@@ -392,7 +392,7 @@ class SimpleFront extends Simple
         foreach ($referenceArea as $vertex) {
             $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
         }
-        print($areaType . 'distance from reference symbol: ' . join(', ', $bounds) . PHP_EOL);
+        print($areaType . ' distance from reference symbol: ' . join(', ', $bounds) . PHP_EOL);
         
         return $referenceArea;
     }
