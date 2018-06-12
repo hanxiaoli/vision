@@ -137,7 +137,7 @@ class Simple
                 foreach ($vertices as $vertex) {
                     $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
                 }
-                print('Reference blockFront vertices: ' . join(', ', $bounds) . PHP_EOL);
+                print('Reference block front vertices: ' . join(', ', $bounds) . PHP_EOL);
                 
                 $instance->setWidthPixMmFront();
             } else {

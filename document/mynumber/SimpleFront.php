@@ -1,4 +1,5 @@
 <?php
+use Google\Cloud\Vision\V1\Symbol;
 
 class SimpleFront extends Simple
 {
@@ -83,7 +84,6 @@ class SimpleFront extends Simple
         "特"
     );
 
-    // 正面参照物标准
     /**
      * 各区域到参照物左上角之间的距离（mm）
      */
@@ -103,17 +103,41 @@ class SimpleFront extends Simple
             )
         ),
         "所" => array(
-            "name" => array(
-                "nameLeft" => 5,
-                "nameRight" => 76,
-                "nameUp" => 11,
-                "nameDown" => - 1
-            ),
             "card" => array(
                 "left" => 5,
                 "right" => 80.5,
                 "up" => 11,
                 "down" => 43
+            ),
+            "name" => array(
+                "left" => 2,
+                "right" => 62,
+                "up" => 11,
+                "down" => 0
+            ),
+            "address" => array(
+                "left" => 2,
+                "right" => 62,
+                "up" => 2,
+                "down" => 8
+            ),
+            "sex" => array(
+                "left" => - 62,
+                "right" => 80,
+                "up" => - 1,
+                "down" => 9
+            ),
+            "birthday" => array(
+                "left" => - 20,
+                "right" => 48.5,
+                "up" => - 4.5,
+                "down" => 13
+            ),
+            "expire" => array(
+                "left" => - 47,
+                "right" => 78.5,
+                "up" => - 5.5,
+                "down" => 13
             )
         ),
         "意" => array(
@@ -214,8 +238,6 @@ class SimpleFront extends Simple
         )
     );
 
-    // "思"字作为参照物时，内容区域的各边与参照物对象左上角点之间的距离
-    
     /**
      * 参照物与其它比较参照物之间的距离（毫米）
      */
@@ -344,7 +366,6 @@ class SimpleFront extends Simple
         )
     );
 
-    
     /**
      * 取得某区域到参照物之间的距离（像素单位）
      *
@@ -367,22 +388,21 @@ class SimpleFront extends Simple
         $widthPixMm = $simple->getWidthPixMmFront();
         $referenceSymbol = $simple->getReferenceSymbolFront();
         
-        $hypotenuse = $widthPixMm * abs(SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["left"]);
+        $hypotenuse = $widthPixMm * SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["left"];
         $leftX = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getX() - $widthTriangleBlock->getCos() * $hypotenuse;
         $leftY = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getY() - $widthTriangleBlock->getSin() * $hypotenuse;
         
-        $hypotenuse = $widthPixMm * abs(SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["up"]);
+        $hypotenuse = $widthPixMm * SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["up"];
         $upX = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getX() - $heightTriangleBlock->getCos() * $hypotenuse;
         $upY = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getY() - $heightTriangleBlock->getSin() * $hypotenuse;
         
-        $hypotenuse = $widthPixMm * abs(SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["right"]);
+        $hypotenuse = $widthPixMm * SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["right"];
         $rightX = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getX() + $widthTriangleBlock->getCos() * $hypotenuse;
         $rightY = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getY() + $widthTriangleBlock->getSin() * $hypotenuse;
         
-        $hypotenuse = $widthPixMm * abs(SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["down"]);
+        $hypotenuse = $widthPixMm * SimpleFront::lengthToReferenceSymbol[$referenceSymbol->getText()][$areaType]["down"];
         $downX = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getX() + $heightTriangleBlock->getCos() * $hypotenuse;
         $downY = ($referenceSymbol->getBoundingBox()->getVertices())[0]->getY() + $heightTriangleBlock->getSin() * $hypotenuse;
-        
         $referenceArea[] = Axis::withXY($leftX, $leftY);
         $referenceArea[] = Axis::withXY($upX, $upY);
         $referenceArea[] = Axis::withXY($rightX, $rightY);
@@ -427,4 +447,170 @@ class SimpleFront extends Simple
         return $area;
     }
 
+    /**
+     * 取得某区域内的内容（画面辅正后）
+     *
+     * @param Simple $simple
+     * @param String $areaType
+     */
+    public static function getContent(Simple $simple, String $areaType)
+    {
+        $symbols = $simple->getSimpleSymbols();
+        $area = SimpleFront::getArea($simple, $areaType);
+        $content = array();
+        $text=null;
+        
+        foreach ($symbols as $symbol) {
+            $vertices = $symbol->getBoundingBox()->getVertices();
+            if ($vertices[0]->getX() >= $area[0]->getX() and $vertices[1]->getX() <= $area[1]->getX() and $vertices[0]->getY() >= $area[0]->getY() and $vertices[3]->getY() <= $area[3]->getY()) {
+                $content[] = $symbol;
+            }
+        }
+
+        $content = SimpleFront::sortContent($content);
+        
+        foreach ($content as $symbol) {
+            $text .= $symbol->getText();
+            
+            $detectedBreak = $symbol->getProperty()->getDetectedBreak();
+            if (null !== $detectedBreak) {
+                $text .= " ";
+            }
+        }
+
+        return $text;
+    }
+    
+    /**
+     * 整理内容的文字顺序
+     *
+     * @param Simple $simple
+     */
+    public static function sortContent(Array $content)
+    {
+        $lines=array();
+        $sorted=array();
+        
+        usort($content, array("SimpleFront", "cmpareBySymbolX"));
+        
+        foreach ($content as $symbol) {
+            $vertices = $symbol->getBoundingBox()->getVertices();
+            $set = false;
+            
+            foreach ($lines as $index=>$line) {
+                if ($vertices[3]->getY() > ($line[0]->getBoundingBox()->getVertices())[0]->getY() and $vertices[0]->getY() < ($line[0]->getBoundingBox()->getVertices())[3]->getY()) {
+                    $line[]=$symbol;
+                    $set=true;
+                    break;
+                }
+            }
+            
+            if (!$set) {
+                $lines[$vertices[0]->getY()] = array($symbol);
+            }
+        }
+        
+        ksort($lines);
+        
+        foreach ($lines as $line) {
+            foreach ($line as $symbol) {
+                $sorted[]=$symbol;
+            }
+        }
+        
+        return $sorted;
+    }
+    
+    /**
+     * 按照symbol的横坐标排序
+     *
+     * @param Symbol $a
+     * @param Symbol $b
+     */
+    public static function cmpareBySymbolX(Symbol $a, Symbol $b)
+    {
+        $ax = $a->getBoundingBox()->getVertices()[0]->getX();
+        $bx = $b->getBoundingBox()->getVertices()[0]->getX();
+        if ($ax == $bx) {
+            return 0;
+        }
+        return ($a < $b) ? -1 : 1;
+    }
+    
+    /**
+     * 姓名
+     *
+     * @param Simple $simple
+     */
+    public static function getName(Simple $simple)
+    {
+        $text=SimpleFront::getContent($simple, "name");
+        
+        $text = str_replace("氏", "", $text);
+        $text = str_replace("名 ", "", $text);
+        print "氏名:" . $text . PHP_EOL;
+        return $text;
+    }
+    
+    /**
+     * 住址
+     *
+     * @param Simple $simple
+     */
+    public static function getAddress(Simple $simple)
+    {
+        $text=SimpleFront::getContent($simple, "address");
+        
+        $text = str_replace("住", "", $text);
+        $text = str_replace("所 ", "", $text);
+        print "住所:" . $text . PHP_EOL;
+        return $text;
+    }
+    
+    /**
+     * 住址
+     *
+     * @param Simple $simple
+     */
+    public static function getSex(Simple $simple)
+    {
+        $text=SimpleFront::getContent($simple, "sex");
+        
+        $text = str_replace("性", "", $text);
+        $text = str_replace("別 ", "", $text);
+        print "性別:" . $text . PHP_EOL;
+        return $text;
+    }
+    
+    /**
+     * 生日
+     *
+     * @param Simple $simple
+     */
+    public static function getBirthday(Simple $simple)
+    {
+        $text=SimpleFront::getContent($simple, "birthday");
+        
+        $text = str_replace("生 ", "", $text);
+        print "生年月日:" . $text . PHP_EOL;
+        return $text;
+    }
+    
+    /**
+     * 有效日期
+     *
+     * @param Simple $simple
+     */
+    public static function getExpire(Simple $simple)
+    {
+        $text=SimpleFront::getContent($simple, "expire");
+        
+        $text = str_replace("ま", "", $text);
+        $text = str_replace("で", "", $text);
+        $text = str_replace("有", "", $text);
+        $text = str_replace("効 ", "", $text);
+        print "有効期限:" . $text . PHP_EOL;
+        return $text;
+    }
+    
 }
