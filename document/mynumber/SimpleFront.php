@@ -116,7 +116,7 @@ class SimpleFront extends Simple
                 "down" => 0
             ),
             "address" => array(
-                "left" => 2,
+                "left" => 5,
                 "right" => 62,
                 "up" => 2,
                 "down" => 8
@@ -497,7 +497,7 @@ class SimpleFront extends Simple
             $vertices = $symbol->getBoundingBox()->getVertices();
             $set = false;
             
-            foreach ($lines as $index=>$line) {
+            foreach ($lines as &$line) {
                 if ($vertices[3]->getY() > ($line[0]->getBoundingBox()->getVertices())[0]->getY() and $vertices[0]->getY() < ($line[0]->getBoundingBox()->getVertices())[3]->getY()) {
                     $line[]=$symbol;
                     $set=true;
@@ -534,7 +534,7 @@ class SimpleFront extends Simple
         if ($ax == $bx) {
             return 0;
         }
-        return ($a < $b) ? -1 : 1;
+        return ($ax < $bx) ? -1 : 1;
     }
     
     /**
