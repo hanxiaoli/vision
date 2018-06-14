@@ -264,7 +264,7 @@ class SimpleFront extends Simple
                 "及" => 43,
                 "意" => 34,
                 "思" => 35.5,
-                "特" => 28
+                "特" => 30
             ),
             "height" => array()
         ),

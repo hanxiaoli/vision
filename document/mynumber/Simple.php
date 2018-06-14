@@ -516,6 +516,7 @@ class Simple
         
         foreach ($comparativeSymbols as $key => $comparativeSymbol) {
             if (array_key_exists($key, $this->comparativeSymbolsFront)) {
+                print "comparative symbol:" . $key . PHP_EOL;
                 $widthPixMmFront = Triangle::withAxis(Axis::withVertex(($this->referenceSymbolFront->getBoundingBox()->getVertices())[0]), Axis::withVertex(($this->comparativeSymbolsFront[$key]->getBoundingBox()->getVertices())[0]))->getHypotenuse() / $comparativeSymbol;
                 break;
             }

@@ -9,12 +9,15 @@ require_once 'document/mynumber/SimpleBack.php';
 use Google\Cloud\Vision\V1\ImageAnnotatorClient;
 use Google\Cloud\Vision\V1\ImageContext;
 
-$path = 'C:/Users/base/Desktop/calculate/4842_001.jpg';
+// $path = 'C:/Users/base/Desktop/calculate/4842_001.jpg';
 
-// $path = '/Volumes/SANDISC32GB/git/hanxiaoli/vision/document/mynumber/asset/1_bw.jpg';
+$path = 'C:/Users/hanxiaoli/git/vision/document/mynumber/asset/4842_001.jpg';
+
 function detect_document_text($path)
 {
-    /** 
+    $pathCut = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_origin.jpg';
+    $pathFixed = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_fixed.jpg';
+    
     $imageAnnotator = new ImageAnnotatorClient();
     $image = file_get_contents($path);
     $imageContext = new ImageContext();
@@ -37,7 +40,7 @@ function detect_document_text($path)
         $white = imagecolorallocate($dst, 255, 255, 255);
         imagefill($dst, 0, 0, $white);
         imagecopy($dst, $src, 0, 0, $cutArea["x"], $cutArea["y"], $cutArea["width"], $cutArea["height"]);
-        imagejpeg($dst, "C:/ocr/image/1_bw_front_origin.jpg", 100);
+        imagejpeg($dst, $pathCut, 100);
         
         $triangleFront = Triangle::withAxis(Axis::withVertex(($simple->getReferenceBlockFront()
             ->getBoundingBox()
@@ -55,13 +58,13 @@ function detect_document_text($path)
         imagecopy($fixedImage, $dst, 0, 0, 0, 0, $w_dst, $h_dst);
         
         // header("Content-type: image/png");
-        imagejpeg($dst, "C:/ocr/image/1_bw_front_fixed.jpg", 100);
+        imagejpeg($dst, $pathFixed, 100);
         imagedestroy($dst);
     }
-    */
+    
     // TODO 辅正后再识别
     $imageAnnotator = new ImageAnnotatorClient();
-    $image = file_get_contents("C:/ocr/image/1_bw_front_fixed.jpg");
+    $image = file_get_contents($pathFixed);
     $imageContext = new ImageContext();
     $imageContext->setLanguageHints(array(
         "ja"
