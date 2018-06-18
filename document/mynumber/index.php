@@ -17,6 +17,11 @@ function detect_document_text($path)
 {
     $pathCut = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_origin.jpg';
     $pathFixed = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_fixed.jpg';
+    $pathName = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_name.jpg';
+    $pathAddress = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_address.jpg';
+    $pathSex = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_sex.jpg';
+    $pathBirthday = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_birthday.jpg';
+    $pathExpire = 'C:/Users/hanxiaoli/Documents/work/vision/image/4842_001_expire.jpg';
     
     $imageAnnotator = new ImageAnnotatorClient();
     $image = file_get_contents($path);
@@ -77,11 +82,55 @@ function detect_document_text($path)
     $simple = Simple::withAnnotation($annotation);
     
     if ($simple->isHasFront()) {
+        
+        $src = imagecreatefromjpeg($pathFixed);
+        $area = SimpleFront::getArea($simple, "name");
+        $dst = imagecreatetruecolor($area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        $white = imagecolorallocate($dst, 255, 255, 255);
+        imagefill($dst, 0, 0, $white);
+        imagecopy($dst, $src, 0, 0, $area[0]->getX(), $area[0]->getY(), $area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        imagejpeg($dst, $pathName, 100);
         $name = SimpleFront::getName($simple, "name");
+        // ////////////////////////////////////////////////////////////////
+        
+        $src = imagecreatefromjpeg($pathFixed);
+        $area = SimpleFront::getArea($simple, "address");
+        $dst = imagecreatetruecolor($area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        $white = imagecolorallocate($dst, 255, 255, 255);
+        imagefill($dst, 0, 0, $white);
+        imagecopy($dst, $src, 0, 0, $area[0]->getX(), $area[0]->getY(), $area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        imagejpeg($dst, $pathAddress, 100);
         $address = SimpleFront::getAddress($simple, "address");
+        // //////////////////////////////////////////////////////////////////////
+        
+        $src = imagecreatefromjpeg($pathFixed);
+        $area = SimpleFront::getArea($simple, "sex");
+        $dst = imagecreatetruecolor($area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        $white = imagecolorallocate($dst, 255, 255, 255);
+        imagefill($dst, 0, 0, $white);
+        imagecopy($dst, $src, 0, 0, $area[0]->getX(), $area[0]->getY(), $area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        imagejpeg($dst, $pathSex, 100);
         $sex = SimpleFront::getSex($simple, "sex");
+        // /////////////////////////////////////////////////////////////////////
+        $src = imagecreatefromjpeg($pathFixed);
+        $area = SimpleFront::getArea($simple, "birthday");
+        $dst = imagecreatetruecolor($area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        $white = imagecolorallocate($dst, 255, 255, 255);
+        imagefill($dst, 0, 0, $white);
+        imagecopy($dst, $src, 0, 0, $area[0]->getX(), $area[0]->getY(), $area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        imagejpeg($dst, $pathBirthday, 100);
         $birthday = SimpleFront::getBirthday($simple, "birthday");
+        // /////////////////////////////////////////////////////////////////////
+        $src = imagecreatefromjpeg($pathFixed);
+        $area = SimpleFront::getArea($simple, "expire");
+        $dst = imagecreatetruecolor($area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        $white = imagecolorallocate($dst, 255, 255, 255);
+        imagefill($dst, 0, 0, $white);
+        imagecopy($dst, $src, 0, 0, $area[0]->getX(), $area[0]->getY(), $area[1]->getX() - $area[0]->getX(), $area[3]->getY() - $area[0]->getY());
+        imagejpeg($dst, $pathExpire, 100);
         $expireDate = SimpleFront::getExpire($simple, "expire");
+        
+        imagedestroy($dst);
     }
 }
 

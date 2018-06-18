@@ -128,9 +128,21 @@ class Simple
             }
             
             if ($matchingTimesFront >= 3) {
+                // TODO 记得测试完删掉
+                foreach ($instance->simpleSymbols as $abc) {
+                    if ($abc->getText() === "住") {
+                        $instance->referenceSymbolFront = $abc;
+                    }
+                }
+                // TODO END
                 $instance->hasFront = true;
                 
-                print('Reference symbol front: ' . $instance->referenceSymbolFront->getText() . '(' . $instance->referenceSymbolFront->getConfidence() . ')' . PHP_EOL);
+                $bounds = [];
+                foreach ($instance->referenceSymbolFront->getBoundingBox()->getVertices() as $vertex) {
+                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+                }
+                
+                print('Reference symbol front: ' . $instance->referenceSymbolFront->getText() . '(' . $instance->referenceSymbolFront->getConfidence() . ')' . join(', ', $bounds) . PHP_EOL);
                 
                 $vertices = $instance->referenceBlockFront->getBoundingBox()->getVertices();
                 $bounds = [];
@@ -516,8 +528,14 @@ class Simple
         
         foreach ($comparativeSymbols as $key => $comparativeSymbol) {
             if (array_key_exists($key, $this->comparativeSymbolsFront)) {
-                print "comparative symbol:" . $key . PHP_EOL;
+                // print "comparative symbol:" . $key . PHP_EOL;
+                $bounds = [];
+                foreach (($this->comparativeSymbolsFront)[$key]->getBoundingBox()->getVertices() as $vertex) {
+                    $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
+                }
+                print("comparative symbol:" . $key . join(', ', $bounds) . PHP_EOL);
                 $widthPixMmFront = Triangle::withAxis(Axis::withVertex(($this->referenceSymbolFront->getBoundingBox()->getVertices())[0]), Axis::withVertex(($this->comparativeSymbolsFront[$key]->getBoundingBox()->getVertices())[0]))->getHypotenuse() / $comparativeSymbol;
+                print("widthPixMmFront:" . $widthPixMmFront . PHP_EOL);
                 break;
             }
         }
@@ -548,12 +566,11 @@ class Simple
     }
 
     /**
+     *
      * @param mixed $heightPixMmBack
      */
     public function setHeightPixMmBack($heightPixMmBack)
     {
         $this->heightPixMmBack = $heightPixMmBack;
     }
-
-
 }
