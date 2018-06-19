@@ -4,70 +4,6 @@ use Google\Cloud\Vision\V1\Symbol;
 class SimpleFront extends Simple
 {
 
-    // TODO 该定义没有被使用
-    /**
-     * 各区域到参照物左上角之间的距离（参照物宽度或高度的倍数）
-     */
-    public const timesTo = array(
-        "思" => array(
-            "card" => array(
-                79,
-                22,
-                86,
-                6
-            ),
-            "name" => array(
-                79,
-                - 17,
-                75,
-                - 13
-            ),
-            "address" => array(
-                79,
-                - 13,
-                75,
-                - 11.5
-            ),
-            "sex" => array(
-                7,
-                22,
-                86,
-                - 5
-            ),
-            "birthday" => array(
-                13,
-                - 13,
-                13,
-                - 11.5
-            ),
-            "expire" => array(
-                - 11.5,
-                - 13,
-                86,
-                - 11.5
-            ),
-            "electronic" => array(
-                79,
-                22,
-                86,
-                6
-            ),
-            "serial1" => array(
-                79,
-                22,
-                86,
-                6
-            ),
-            "serial2" => array(
-                79,
-                22,
-                86,
-                6
-            )
-        ),
-        "住" => array()
-    );
-
     /**
      * 正面参照文字列表
      */
@@ -203,28 +139,80 @@ class SimpleFront extends Simple
             )
         ),
         "思" => array(
-            "住" => 33.5,
-            "所" => 35.5,
-            "別" => 34.5,
-            "個" => 34,
-            "性" => 32.5,
-            "電" => 14,
-            "left" => 40.5,
-            "right" => 45,
-            "up" => 45,
-            "down" => 9
+            "card" => array(
+                "left" => 40.3,
+                "right" => 45.3,
+                "up" => 44.8,
+                "down" => 8.5
+            ),
+            "name" => array(
+                "left" => 40.3,
+                "right" => 27.5,
+                "up" => 44.8,
+                "down" => - 35.5
+            ),
+            "address" => array(
+                "left" => 40.3,
+                "right" => 27.5,
+                "up" => 38.5,
+                "down" => - 27
+            ),
+            "sex" => array(
+                "left" => - 26.5,
+                "right" => 45.3,
+                "up" => 33,
+                "down" => - 26.5
+            ),
+            "birthday" => array(
+                "left" => 15,
+                "right" => 14.5,
+                "up" => 31.5,
+                "down" => - 22.5
+            ),
+            "expire" => array(
+                "left" => - 11,
+                "right" => 48.5,
+                "up" => 28.5,
+                "down" => - 22.5
+            )
         ),
         "性" => array(
-            "住" => 70,
-            "所" => 68,
-            "意" => 34,
-            "思" => 32.5,
-            "及" => 24,
-            "特" => 40,
-            "left" => 72.5,
-            "right" => 13,
-            "up" => 14.5,
-            "down" => 39.5
+            "card" => array(
+                "left" => 72.8,
+                "right" => 13,
+                "up" => 14.5,
+                "down" => 40
+            ),
+            "name" => array(
+                "left" => 72.8,
+                "right" => - 6,
+                "up" => 14.5,
+                "down" => - 4
+            ),
+            "address" => array(
+                "left" => 72.8,
+                "right" => - 6,
+                "up" => 8.5,
+                "down" => 4
+            ),
+            "sex" => array(
+                "left" => 6,
+                "right" => 13,
+                "up" => 3,
+                "down" => 4
+            ),
+            "birthday" => array(
+                "left" => 48,
+                "right" => - 18,
+                "up" => - 2,
+                "down" => 8
+            ),
+            "expire" => array(
+                "left" => 21.5,
+                "right" => 13,
+                "up" => - 2,
+                "down" => 8
+            )
         ),
         "別" => array(
             "住" => 72,
@@ -320,38 +308,37 @@ class SimpleFront extends Simple
         ),
         "意" => array(
             "width" => array(
-                "住" => 50,
+                "住" => 49.5,
                 "個" => 51,
                 "所" => 48,
                 "別" => 47,
                 "性" => 46,
-                "電" => 26.5
+                "電" => 26
             ),
             "height" => array()
         ),
         "思" => array(
-            "住" => 33.5,
-            "所" => 35.5,
-            "別" => 34.5,
-            "個" => 34,
-            "性" => 32.5,
-            "電" => 14,
-            "left" => 40.5,
-            "right" => 45,
-            "up" => 45,
-            "down" => 9
+            "width" => array(
+                "住" => 50,
+                "個" => 50,
+                "所" => 49,
+                "別" => 46,
+                "性" => 45,
+                "電" => 26
+            ),
+            "height" => array()
         ),
         "性" => array(
-            "住" => 70,
-            "所" => 68,
-            "意" => 34,
-            "思" => 32.5,
-            "及" => 24,
-            "特" => 40,
-            "left" => 72.5,
-            "right" => 13,
-            "up" => 14.5,
-            "down" => 39.5
+            "width" => array(
+                "住" => 70.5,
+                "所" => 68,
+                "特" => 54,
+                "意" => 46,
+                "思" => 45,
+                "及" => 39.5,
+                "電" => 20.5
+            ),
+            "height" => array()
         ),
         "別" => array(
             "住" => 72,
@@ -620,7 +607,7 @@ class SimpleFront extends Simple
         print "住所:" . $text . PHP_EOL;
         return $text;
     }
-    
+
     /**
      * 住址
      *
@@ -628,14 +615,14 @@ class SimpleFront extends Simple
      */
     public static function getSex(Simple $simple)
     {
-        $text=SimpleFront::getContent($simple, "sex");
+        $text = SimpleFront::getContent($simple, "sex");
         
         $text = str_replace("性", "", $text);
         $text = str_replace("別 ", "", $text);
         print "性別:" . $text . PHP_EOL;
         return $text;
     }
-    
+
     /**
      * 生日
      *
@@ -643,13 +630,13 @@ class SimpleFront extends Simple
      */
     public static function getBirthday(Simple $simple)
     {
-        $text=SimpleFront::getContent($simple, "birthday");
+        $text = SimpleFront::getContent($simple, "birthday");
         
         $text = str_replace("生 ", "", $text);
         print "生年月日:" . $text . PHP_EOL;
         return $text;
     }
-    
+
     /**
      * 有效日期
      *
@@ -657,8 +644,9 @@ class SimpleFront extends Simple
      */
     public static function getExpire(Simple $simple)
     {
-        $text=SimpleFront::getContent($simple, "expire");
+        $text = SimpleFront::getContent($simple, "expire");
         
+        $text = str_replace("生", "", $text);
         $text = str_replace("ま", "", $text);
         $text = str_replace("で", "", $text);
         $text = str_replace("有", "", $text);
@@ -666,5 +654,4 @@ class SimpleFront extends Simple
         print "有効期限:" . $text . PHP_EOL;
         return $text;
     }
-    
 }

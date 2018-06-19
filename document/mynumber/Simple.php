@@ -130,7 +130,7 @@ class Simple
             if ($matchingTimesFront >= 3) {
                 // TODO 记得测试完删掉
                 foreach ($instance->simpleSymbols as $abc) {
-                    if ($abc->getText() === "住") {
+                    if ($abc->getText() === "性") {
                         $instance->referenceSymbolFront = $abc;
                     }
                 }
@@ -528,7 +528,6 @@ class Simple
         
         foreach ($comparativeSymbols as $key => $comparativeSymbol) {
             if (array_key_exists($key, $this->comparativeSymbolsFront)) {
-                // print "comparative symbol:" . $key . PHP_EOL;
                 $bounds = [];
                 foreach (($this->comparativeSymbolsFront)[$key]->getBoundingBox()->getVertices() as $vertex) {
                     $bounds[] = sprintf('(%d,%d)', $vertex->getX(), $vertex->getY());
@@ -541,7 +540,7 @@ class Simple
         }
         
         if (null === $widthPixMmFront) {
-            echo "setWidthPixMmFront error 1";
+            echo "setWidthPixMmFront error 1" . PHP_EOL;
         }
         
         $this->widthPixMmFront = $widthPixMmFront;
