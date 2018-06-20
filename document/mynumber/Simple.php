@@ -130,7 +130,7 @@ class Simple
             if ($matchingTimesFront >= 3) {
                 // TODO 记得测试完删掉
                 foreach ($instance->simpleSymbols as $abc) {
-                    if ($abc->getText() === "性") {
+                    if ($abc->getText() === "脳") {
                         $instance->referenceSymbolFront = $abc;
                     }
                 }
