@@ -252,44 +252,44 @@ class SimpleFront extends Simple
                 "down" => 8
             )
         ),
-        "脳" => array(
-            "card" => array(
-                "left" => 48,
-                "right" => 37.5,
-                "up" => 45,
-                "down" => 9
-            ),
-            "name" => array(
-                "left" => 48,
-                "right" => 19,
-                "up" => 45,
-                "down" => - 35
-            ),
-            "address" => array(
-                "left" => 48,
-                "right" => 19,
-                "up" => 39,
-                "down" => - 27
-            ),
-            "sex" => array(
-                "left" => - 18.5,
-                "right" => 37.5,
-                "up" => 33.5,
-                "down" => - 26
-            ),
-            "birthday" => array(
-                "left" => 23,
-                "right" => 7.5,
-                "up" => 32,
-                "down" => - 22.5
-            ),
-            "expire" => array(
-                "left" => - 3.5,
-                "right" => 37.5,
-                "up" => 28.5,
-                "down" => - 22
-            )
-        ),
+        // "停" => array(
+        // "card" => array(
+        // "left" => 52,
+        // "right" => 33.7,
+        // "up" => 45,
+        // "down" => 9
+        // ),
+        // "name" => array(
+        // "left" => 52,
+        // "right" => 4,
+        // "up" => 45,
+        // "down" => - 35
+        // ),
+        // "address" => array(
+        // "left" => 52,
+        // "right" => 4,
+        // "up" => 39,
+        // "down" => - 27
+        // ),
+        // "sex" => array(
+        // "left" => - 20.5,
+        // "right" => 33.7,
+        // "up" => 33.5,
+        // "down" => - 26
+        // ),
+        // "birthday" => array(
+        // "left" => 26.5,
+        // "right" => 3.7,
+        // "up" => 32,
+        // "down" => - 22.5
+        // ),
+        // "expire" => array(
+        // "left" => - 1,
+        // "right" => 33.7,
+        // "up" => 28.5,
+        // "down" => - 22
+        // )
+        // ),
         "個" => array(
             "card" => array(
                 "left" => 74,
@@ -415,8 +415,8 @@ class SimpleFront extends Simple
                 "別" => 72,
                 "個" => 71.5,
                 "性" => 70.5,
+                // "停" => 60,
                 "及" => 57,
-                "電" => 53,
                 "思" => 51,
                 "意" => 50,
                 "特" => 50
@@ -429,7 +429,7 @@ class SimpleFront extends Simple
                 "個" => 69,
                 "性" => 68,
                 "及" => 57,
-                "電" => 51,
+                // "停" => 57.8,
                 "意" => 48,
                 "思" => 49,
                 "特" => 48
@@ -443,7 +443,7 @@ class SimpleFront extends Simple
                 "所" => 48,
                 "別" => 47,
                 "性" => 46,
-                "電" => 26,
+                // "停" => 13,
                 "及" => 9.25
             ),
             "height" => array()
@@ -455,7 +455,7 @@ class SimpleFront extends Simple
                 "所" => 49,
                 "別" => 46,
                 "性" => 45,
-                "電" => 26,
+                // "停" => 11.5,
                 "及" => 7.9
             ),
             "height" => array()
@@ -467,8 +467,8 @@ class SimpleFront extends Simple
                 "特" => 54,
                 "意" => 46,
                 "思" => 45,
-                "及" => 39.5,
-                "電" => 20.5
+                "及" => 39.5
+                // "停" => 37
             ),
             "height" => array()
         ),
@@ -479,26 +479,26 @@ class SimpleFront extends Simple
                 "特" => 55,
                 "意" => 47,
                 "思" => 46,
-                "及" => 40.5,
-                "電" => 22.5
+                "及" => 40.5
+                // "停" => 38
             
             ),
             "height" => array()
         ),
-        "脳" => array(
-            "width" => array(
-                "住" => 57,
-                "所" => 55,
-                "個" => 45,
-                "別" => 40.5,
-                "性" => 39.7,
-                "及" => 22.5,
-                "特" => 16.2,
-                "意" => 9.25,
-                "思" => 7.9
-            ),
-            "height" => array()
-        ),
+        // "停" => array(
+        // "width" => array(
+        // "住" => 68.5,
+        // "所" => 57.8,
+        // "個" => 43,
+        // "別" => 38,
+        // "性" => 37,
+        // "特" => 20,
+        // "意" => 13,
+        // "思" => 11.5,
+        // "及" => 3.8
+        // ),
+        // "height" => array()
+        // ),
         "個" => array(
             "width" => array(
                 "住" => 71.5,
@@ -506,8 +506,8 @@ class SimpleFront extends Simple
                 "特" => 59,
                 "意" => 51,
                 "思" => 50,
-                "及" => 45,
-                "電" => 25.5
+                "及" => 45
+                // "停" => 43
             ),
             "height" => array()
         ),
@@ -518,10 +518,10 @@ class SimpleFront extends Simple
                 "個" => 45,
                 "別" => 40.5,
                 "性" => 39.7,
-                "電" => 22.5,
                 "特" => 16.2,
                 "意" => 9.25,
                 "思" => 7.9
+                // "停" => 3.8
             ),
             "height" => array()
         ),
@@ -532,7 +532,7 @@ class SimpleFront extends Simple
                 "性" => 54,
                 "住" => 50,
                 "所" => 48,
-                "電" => 34,
+                // "停" => 20,
                 "及" => 16.1
             ),
             "height" => array()
@@ -645,8 +645,7 @@ class SimpleFront extends Simple
         foreach ($content as $symbol) {
             $text .= $symbol->getText();
             
-            $detectedBreak = $symbol->getProperty()->getDetectedBreak();
-            if (null !== $detectedBreak) {
+            if (null !== $symbol->getProperty() and null !== $symbol->getProperty()->getDetectedBreak()) {
                 $text .= " ";
             }
         }
@@ -768,6 +767,22 @@ class SimpleFront extends Simple
     public static function getBirthday(Simple $simple)
     {
         $text = SimpleFront::getContent($simple, "birthday");
+        $numbers = array(
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+        );
+        
+        while (in_array(substr($text, - 1), $numbers)) {
+            $text = str_replace(substr($text, - 1), "", $text);
+        }
         
         $text = str_replace("生 ", "", $text);
         print "生年月日:" . $text . PHP_EOL;

@@ -129,11 +129,11 @@ class Simple
             
             if ($matchingTimesFront >= 3) {
                 // TODO 记得测试完删掉
-                foreach ($instance->simpleSymbols as $abc) {
-                    if ($abc->getText() === "脳") {
-                        $instance->referenceSymbolFront = $abc;
-                    }
-                }
+                // foreach ($instance->simpleSymbols as $abc) {
+                // if ($abc->getText() === "停") {
+                // $instance->referenceSymbolFront = $abc;
+                // }
+                // }
                 // TODO END
                 $instance->hasFront = true;
                 
